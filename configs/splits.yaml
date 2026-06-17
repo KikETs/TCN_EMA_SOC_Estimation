@@ -1,0 +1,14 @@
+profiles:
+  train: [DST, US06, BJDST]
+  validation: []
+  test: [FUDS]
+
+temperatures_C:
+  train: [0, 25, 45]
+  test: [0, 25, 45]
+
+protocol:
+  name: train_DST_US06_BJDST_test_FUDS
+  fixed_epoch: 160
+  note: FUDS was observed during development; this is a frozen candidate confirmation package, not a pre-declared blind benchmark.
+

@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "Causal EMA Memory Features for Strict NoCC SOC Estimation"
+message: "If you use this reproducibility package, please cite the associated manuscript or update this placeholder."
+type: software
+authors:
+  - name: "Author names to be added"
+version: "0.1.0"
+date-released: "2026-06-17"
+

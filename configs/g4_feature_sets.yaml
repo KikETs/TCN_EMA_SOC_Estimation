@@ -1,0 +1,126 @@
+feature_sets:
+  G0_raw:
+    description: Raw corrected voltage, instantaneous current, and ambient temperature.
+    features:
+      - V_corr_raw
+      - I_raw
+      - T
+  G1_derivatives:
+    description: G0 plus local derivatives and excitation magnitude.
+    features:
+      - V_corr_raw
+      - I_raw
+      - T
+      - dI
+      - absI
+      - dV_corr
+      - abs_dV_corr
+      - d2V_corr
+  G4_all_ema:
+    description: Frozen paper candidate with causal voltage and current/abs-current EMA memory.
+    aliases: [paper_g4_all_ema]
+    features:
+      - V_corr_raw
+      - I_raw
+      - T
+      - V_corr_raw_ema50
+      - V_corr_raw_dev_ema50
+      - V_corr_raw_ema200
+      - V_corr_raw_dev_ema200
+      - V_corr_raw_ema800
+      - V_corr_raw_dev_ema800
+      - I_raw_ema50
+      - I_raw_dev_ema50
+      - I_raw_ema200
+      - I_raw_dev_ema200
+      - absI_ema50
+      - absI_dev_ema50
+      - absI_ema200
+      - absI_dev_ema200
+  G6_full23:
+    description: G4 plus derivative and excitation terms.
+    features:
+      - V_corr_raw
+      - I_raw
+      - T
+      - dI
+      - absI
+      - dV_corr
+      - abs_dV_corr
+      - d2V_corr
+      - Vcorr_x_absI
+      - V_corr_raw_ema50
+      - V_corr_raw_dev_ema50
+      - V_corr_raw_ema200
+      - V_corr_raw_dev_ema200
+      - V_corr_raw_ema800
+      - V_corr_raw_dev_ema800
+      - I_raw_ema50
+      - I_raw_dev_ema50
+      - I_raw_ema200
+      - I_raw_dev_ema200
+      - absI_ema50
+      - absI_dev_ema50
+      - absI_ema200
+      - absI_dev_ema200
+  G7_no_current_ema:
+    description: G6 without current or absolute-current EMA channels.
+    features:
+      - V_corr_raw
+      - I_raw
+      - T
+      - dI
+      - absI
+      - dV_corr
+      - abs_dV_corr
+      - d2V_corr
+      - Vcorr_x_absI
+      - V_corr_raw_ema50
+      - V_corr_raw_dev_ema50
+      - V_corr_raw_ema200
+      - V_corr_raw_dev_ema200
+      - V_corr_raw_ema800
+      - V_corr_raw_dev_ema800
+  G8_no_voltage_ema:
+    description: G6 without voltage EMA channels.
+    features:
+      - V_corr_raw
+      - I_raw
+      - T
+      - dI
+      - absI
+      - dV_corr
+      - abs_dV_corr
+      - d2V_corr
+      - Vcorr_x_absI
+      - I_raw_ema50
+      - I_raw_dev_ema50
+      - I_raw_ema200
+      - I_raw_dev_ema200
+      - absI_ema50
+      - absI_dev_ema50
+      - absI_ema200
+      - absI_dev_ema200
+
+forbidden_tokens:
+  - SOC
+  - SOC_CC
+  - Ah
+  - cumulative
+  - progress
+  - target
+  - label
+
+allowed_current_features:
+  - I_raw
+  - absI
+  - dI
+  - I_raw_ema50
+  - I_raw_dev_ema50
+  - I_raw_ema200
+  - I_raw_dev_ema200
+  - absI_ema50
+  - absI_dev_ema50
+  - absI_ema200
+  - absI_dev_ema200
+

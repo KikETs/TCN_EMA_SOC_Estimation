@@ -1,0 +1,53 @@
+# Raw and processed battery data are intentionally excluded.
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/cache/*
+!data/cache/.gitkeep
+
+# Runtime outputs.
+results/checkpoints/*
+!results/checkpoints/.gitkeep
+results/predictions/*
+!results/predictions/.gitkeep
+results/metrics/*
+!results/metrics/.gitkeep
+results/figures/*
+!results/figures/.gitkeep
+
+# Heavy or generated ML artifacts.
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.npy
+*.npz
+*.pkl
+*.joblib
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.h5
+*.hdf5
+
+# Python and notebook noise.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local environments and OS files.
+.venv/
+venv/
+env/
+.env
+.DS_Store
+Thumbs.db
+
+# Paper artifacts are kept local unless explicitly requested for commit.
+paper_artifacts

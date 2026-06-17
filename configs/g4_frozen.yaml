@@ -1,0 +1,73 @@
+experiment:
+  config_id: paperema_g4_candidate_frozen_e160
+  model_name: anchor_residual_tcn
+  description: Frozen G4 candidate using causal EMA memory features under strict NoCC input rules.
+
+paths:
+  raw_root: data/raw/NMC_SAMSUNG_INR_18650_2Ah
+  processed_root: data/processed
+  cache_root: data/cache
+  results_root: results
+
+data:
+  train_profiles: [DST, US06, BJDST]
+  valid_profiles: []
+  test_profiles: [FUDS]
+  train_temperatures_C: [0, 25, 45]
+  test_temperatures_C: [0, 25, 45]
+  label: physical_smoothQ_or_relabelled_SOC_target
+  raw_data_included: false
+
+features:
+  feature_set: paper_g4_all_ema
+  input_dim: 17
+  no_soc_input: true
+  no_cumulative_input: true
+  no_absolute_time_or_progress: true
+  no_explicit_current_integration_state_update: true
+  current_usage: instantaneous and finite-memory causal excitation only
+
+model:
+  encoder: causal_tcn
+  hidden_size: 128
+  layers: 6
+  kernel_size: 5
+  norm_kind: channel
+  dropout: 0.06
+  temp_mode: moe
+  head_kind: linear
+  model_kind: anchor_residual
+  anchor_residual_limit: 0.12
+  stage2_or_correction: none
+
+windowing:
+  window_len: 50
+  train_stride: 3
+  test_stride: 1
+  stateless_windows: true
+  hidden_reset_per_window: true
+
+training:
+  seeds: [0, 1, 2]
+  fixed_epoch: 160
+  optimizer: AdamW
+  lr: 0.0008
+  weight_decay: 0.0002
+  batch_size: 1024
+  loss: Huber
+  huber_beta: 0.02
+  lambda_rex: 2.0
+  rex_group: temperature_drive
+  lambda_condinv: 0.02
+  lambda_anchor_loss: 0.1
+  temperature_weights:
+    "0C": 0.8
+    "25C": 2.2
+    "45C": 1.0
+
+disclosure:
+  selected_after_seed0_feature_ablation: true
+  predeclared_blind_model: false
+  no_global_sota_claim: true
+  no_temperature_extrapolation_claim: true
+
