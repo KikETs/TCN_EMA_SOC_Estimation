@@ -182,7 +182,7 @@ def make_figure(data_root: Path, out_path: Path, current_temp: float) -> None:
 
         for row in range(3):
             ax = axes[row, col]
-            ax.grid(alpha=0.18, lw=0.5)
+            ax.grid(False)
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
             if col == 0:
