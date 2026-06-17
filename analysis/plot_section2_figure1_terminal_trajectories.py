@@ -20,6 +20,11 @@ TEMP_COLORS = {
     25.0: "#2ca02c",
     45.0: "#d62728",
 }
+TEMP_ALPHA = {
+    0.0: 0.95,
+    25.0: 0.52,
+    45.0: 0.58,
+}
 
 COLUMN_ALIASES = {
     "cycle_time": ["Step_Time(s)", "Step_Time", "step_time", "Time", "time", "t"],
@@ -177,8 +182,22 @@ def make_figure(data_root: Path, out_path: Path, current_temp: float) -> None:
         for temp in TEMP_ORDER:
             frame = frames[(temp, profile)]
             label = f"{int(temp)}°C"
-            axes[1, col].plot(frame["trajectory_time_s"], frame["voltage_V"], color=TEMP_COLORS[temp], lw=0.9, label=label)
-            axes[2, col].plot(frame["trajectory_time_s"], frame["soc_percent"], color=TEMP_COLORS[temp], lw=0.9, label=label)
+            axes[1, col].plot(
+                frame["trajectory_time_s"],
+                frame["voltage_V"],
+                color=TEMP_COLORS[temp],
+                alpha=TEMP_ALPHA[temp],
+                lw=0.9,
+                label=label,
+            )
+            axes[2, col].plot(
+                frame["trajectory_time_s"],
+                frame["soc_percent"],
+                color=TEMP_COLORS[temp],
+                alpha=TEMP_ALPHA[temp],
+                lw=0.9,
+                label=label,
+            )
 
         for row in range(3):
             ax = axes[row, col]
