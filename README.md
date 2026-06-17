@@ -91,6 +91,21 @@ python scripts/build_paper_artifacts.py
 
 This regenerates tables and figures from `paper_artifacts/source_metrics/` if those local source metric files are present.
 
+## Build Section 2 Measurement-Structure Analysis
+
+The manuscript Section 2 package analyzes terminal voltage/current/temperature/SOC records only. It does not train models and does not use G4 predictions or ablation outputs.
+
+```bash
+python analysis/section2_measurement_structure.py \
+  --data-root data \
+  --out-dir paper_ema_analysis_package/section2_measurement_structure \
+  --profiles DST US06 FUDS BJDST \
+  --temperatures 0 25 45 \
+  --main-test-profile FUDS
+```
+
+Generated tables, figures, metadata, and the markdown report are written under `paper_ema_analysis_package/section2_measurement_structure/`.
+
 ## NoCC Protocol
 
 Forbidden as model inputs:
