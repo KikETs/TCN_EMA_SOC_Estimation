@@ -49,5 +49,6 @@ env/
 .DS_Store
 Thumbs.db
 
-# Paper artifacts are kept local unless explicitly requested for commit.
-paper_artifacts
+# Local training scratch outputs.
+nmc_goal_vcorr_it_train_dst_selector_results/
+feature_ablation_runs/

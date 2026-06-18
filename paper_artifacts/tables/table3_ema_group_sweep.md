@@ -1,0 +1,11 @@
+| group_id | description | feature_set | input_dim | 0C_MAE_pct | 25C_MAE_pct | 45C_MAE_pct | tempmean_MAE_pct | worst_temp_MAE_pct |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| T8 | raw + all EMA = G4 | paper_g4_all_ema | 17 | 0.4304 | 0.4607 | 0.3561 | 0.4157 | 0.4607 |
+| T7 | raw + current/abs-current EMA 50/200 | paper_t7_current_abs_ema_all | 11 | 0.6322 | 0.3510 | 0.3066 | 0.4299 | 0.6322 |
+| I200 | current/abs-current EMA 200 only | paper_current_abs_ema200_only | 7 | 0.5830 | 0.5718 | 0.1959 | 0.4502 | 0.5830 |
+| I50 | current/abs-current EMA 50 only | paper_current_abs_ema50_only | 7 | 0.9135 | 1.3925 | 0.2776 | 0.8612 | 1.3925 |
+| V800 | voltage EMA 800 only | paper_voltage_ema800_only | 5 | 0.4815 | 1.8928 | 0.2475 | 0.8739 | 1.8928 |
+| V200 | voltage EMA 200 only | paper_voltage_ema200_only | 5 | 0.7365 | 2.0237 | 0.2219 | 0.9940 | 2.0237 |
+| T6 | raw + voltage EMA 50/200/800 | paper_t6_voltage_ema_all | 9 | 0.4870 | 2.1183 | 0.3884 | 0.9979 | 2.1183 |
+| V50 | voltage EMA 50 only | paper_voltage_ema50_only | 5 | 0.8387 | 2.1158 | 0.2289 | 1.0611 | 2.1158 |
+| T0 | raw V_corr/I/T | paper_g0_raw | 3 | 1.0366 | 1.9431 | 0.2327 | 1.0708 | 1.9431 |

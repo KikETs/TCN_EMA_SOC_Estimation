@@ -1,0 +1,37 @@
+group_id,description,feature_set,input_dim,sweep_kind,seed,temperature_C,MAE_pct,RMSE_pct,n_windows,run_status,source_prefix
+T0,raw V_corr/I/T,paper_g0_raw,3,group,0,0.0,1.036555178542146,1.4905398473968203,9658,DONE,paperema_group_T0_raw_seed0_e160
+T0,raw V_corr/I/T,paper_g0_raw,3,group,0,25.0,1.9430752456010083,2.078294614731356,11043,DONE,paperema_group_T0_raw_seed0_e160
+T0,raw V_corr/I/T,paper_g0_raw,3,group,0,45.0,0.2326628720501889,0.309488964216283,11577,DONE,paperema_group_T0_raw_seed0_e160
+T6,raw + voltage EMA 50/200/800,paper_t6_voltage_ema_all,9,group,0,0.0,0.4869593722797076,0.6301967377955271,9658,DONE,paperema_group_T6_voltage_ema_seed0_e160
+T6,raw + voltage EMA 50/200/800,paper_t6_voltage_ema_all,9,group,0,25.0,2.118324560930383,2.280467488817673,11043,DONE,paperema_group_T6_voltage_ema_seed0_e160
+T6,raw + voltage EMA 50/200/800,paper_t6_voltage_ema_all,9,group,0,45.0,0.3883961847823776,0.509630860832389,11577,DONE,paperema_group_T6_voltage_ema_seed0_e160
+T7,raw + current/abs-current EMA 50/200,paper_t7_current_abs_ema_all,11,group,0,0.0,0.6321937752994451,0.8873256014928184,9658,DONE,paperema_group_T7_current_abs_ema_seed0_e160
+T7,raw + current/abs-current EMA 50/200,paper_t7_current_abs_ema_all,11,group,0,25.0,0.3509893048600875,0.4677976068691619,11043,DONE,paperema_group_T7_current_abs_ema_seed0_e160
+T7,raw + current/abs-current EMA 50/200,paper_t7_current_abs_ema_all,11,group,0,45.0,0.30657762977407,0.4055909155946505,11577,DONE,paperema_group_T7_current_abs_ema_seed0_e160
+T8,raw + all EMA = G4,paper_g4_all_ema,17,group,0,0.0,0.430427343856723,0.5908101403586241,9658,DONE,paperema_group_T8_all_ema_G4_seed0_e160
+T8,raw + all EMA = G4,paper_g4_all_ema,17,group,0,25.0,0.4606724028288104,0.6658095440246178,11043,DONE,paperema_group_T8_all_ema_G4_seed0_e160
+T8,raw + all EMA = G4,paper_g4_all_ema,17,group,0,45.0,0.3560582441483341,0.4928412812164819,11577,DONE,paperema_group_T8_all_ema_G4_seed0_e160
+V50,voltage EMA 50 only,paper_voltage_ema50_only,5,tau,0,0.0,0.8386800096108569,1.2355831796315897,9658,DONE,paperema_tau_voltage_ema50_only_seed0_e160
+V50,voltage EMA 50 only,paper_voltage_ema50_only,5,tau,0,25.0,2.1158259059384736,2.224517436978653,11043,DONE,paperema_tau_voltage_ema50_only_seed0_e160
+V50,voltage EMA 50 only,paper_voltage_ema50_only,5,tau,0,45.0,0.2288812366474722,0.2753540416690267,11577,DONE,paperema_tau_voltage_ema50_only_seed0_e160
+V200,voltage EMA 200 only,paper_voltage_ema200_only,5,tau,0,0.0,0.7365408756392766,1.1047014404354198,9658,DONE,paperema_tau_voltage_ema200_only_seed0_e160
+V200,voltage EMA 200 only,paper_voltage_ema200_only,5,tau,0,25.0,2.023687265947613,2.147512915362255,11043,DONE,paperema_tau_voltage_ema200_only_seed0_e160
+V200,voltage EMA 200 only,paper_voltage_ema200_only,5,tau,0,45.0,0.2219038753298637,0.2665703755606479,11577,DONE,paperema_tau_voltage_ema200_only_seed0_e160
+V800,voltage EMA 800 only,paper_voltage_ema800_only,5,tau,0,0.0,0.4814585424353306,0.7097428767500917,9658,DONE,paperema_tau_voltage_ema800_only_seed0_e160
+V800,voltage EMA 800 only,paper_voltage_ema800_only,5,tau,0,25.0,1.892816224824062,2.0707734198178502,11043,DONE,paperema_tau_voltage_ema800_only_seed0_e160
+V800,voltage EMA 800 only,paper_voltage_ema800_only,5,tau,0,45.0,0.2475249074310015,0.3167927419176419,11577,DONE,paperema_tau_voltage_ema800_only_seed0_e160
+I50,current/abs-current EMA 50 only,paper_current_abs_ema50_only,7,tau,0,0.0,0.9135334751921476,1.3292584072685685,9658,DONE,paperema_tau_current_abs_ema50_only_seed0_e160
+I50,current/abs-current EMA 50 only,paper_current_abs_ema50_only,7,tau,0,25.0,1.3924757466846909,1.582202946348791,11043,DONE,paperema_tau_current_abs_ema50_only_seed0_e160
+I50,current/abs-current EMA 50 only,paper_current_abs_ema50_only,7,tau,0,45.0,0.2775840714176135,0.3644899427973821,11577,DONE,paperema_tau_current_abs_ema50_only_seed0_e160
+I200,current/abs-current EMA 200 only,paper_current_abs_ema200_only,7,tau,0,0.0,0.5830155220750598,0.8439207581888464,9658,DONE,paperema_tau_current_abs_ema200_only_seed0_e160
+I200,current/abs-current EMA 200 only,paper_current_abs_ema200_only,7,tau,0,25.0,0.5718050050117999,0.6886130294498303,11043,DONE,paperema_tau_current_abs_ema200_only_seed0_e160
+I200,current/abs-current EMA 200 only,paper_current_abs_ema200_only,7,tau,0,45.0,0.1958969081736315,0.2727371094140137,11577,DONE,paperema_tau_current_abs_ema200_only_seed0_e160
+I200,current/abs-current EMA 200 only,paper_current_abs_ema200_only,7,tau,0,ALL,0.4502391450868304,0.6017569656842301,32278,DONE,paperema_tau_current_abs_ema200_only_seed0_e160
+I50,current/abs-current EMA 50 only,paper_current_abs_ema50_only,7,tau,0,ALL,0.861197764431484,1.0919837654715805,32278,DONE,paperema_tau_current_abs_ema50_only_seed0_e160
+T0,raw V_corr/I/T,paper_g0_raw,3,group,0,ALL,1.0707644320644478,1.2927744754481532,32278,DONE,paperema_group_T0_raw_seed0_e160
+T6,raw + voltage EMA 50/200/800,paper_t6_voltage_ema_all,9,group,0,ALL,0.997893372664156,1.140098362481863,32278,DONE,paperema_group_T6_voltage_ema_seed0_e160
+T7,raw + current/abs-current EMA 50/200,paper_t7_current_abs_ema_all,11,group,0,ALL,0.4299202366445342,0.5869047079855436,32278,DONE,paperema_group_T7_current_abs_ema_seed0_e160
+T8,raw + all EMA = G4,paper_g4_all_ema,17,group,0,ALL,0.4157193302779558,0.5831536551999079,32278,DONE,paperema_group_T8_all_ema_G4_seed0_e160
+V200,voltage EMA 200 only,paper_voltage_ema200_only,5,tau,0,ALL,0.9940440056389178,1.1729282437861077,32278,DONE,paperema_tau_voltage_ema200_only_seed0_e160
+V50,voltage EMA 50 only,paper_voltage_ema50_only,5,tau,0,ALL,1.0611290507322677,1.2451515527597563,32278,DONE,paperema_tau_voltage_ema50_only_seed0_e160
+V800,voltage EMA 800 only,paper_voltage_ema800_only,5,tau,0,ALL,0.873933224896798,1.0324363461618613,32278,DONE,paperema_tau_voltage_ema800_only_seed0_e160

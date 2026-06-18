@@ -1,0 +1,6 @@
+| baseline | model | feature_columns | run_status | 0C_MAE_pct | 25C_MAE_pct | 45C_MAE_pct | tempmean_MAE_pct | worst_temp_MAE_pct |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| FORBIDDEN_G4_plus_cumulative_Ah | fixed ridge endpoint diagnostic | V_corr_raw,I_raw,T,V_corr_raw_ema50,V_corr_raw_dev_ema50,V_corr_raw_ema200,V_corr_raw_dev_ema200,V_corr_raw_ema800,V_corr_raw_dev_ema800,I_raw_ema50,I_raw_dev_ema50,I_raw_ema200,I_raw_dev_ema200,absI_ema50,absI_dev_ema50,absI_ema200,absI_dev_ema200,forbidden_cumulative_Ah | FORBIDDEN_REFERENCE_ONLY | 1.0826 | 1.6437 | 0.5720 | 1.0994 | 1.6437 |
+| FORBIDDEN_raw_plus_SOC_CC | fixed ridge endpoint diagnostic | V_corr_raw,I_raw,T,forbidden_SOC_CC | FORBIDDEN_REFERENCE_ONLY | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
+| FORBIDDEN_raw_plus_cumulative_Ah | fixed ridge endpoint diagnostic | V_corr_raw,I_raw,T,forbidden_cumulative_Ah | FORBIDDEN_REFERENCE_ONLY | 1.3542 | 1.8242 | 0.2572 | 1.1452 | 1.8242 |
+| FORBIDDEN_raw_plus_trajectory_progress | fixed ridge endpoint diagnostic | V_corr_raw,I_raw,T,forbidden_trajectory_progress | FORBIDDEN_REFERENCE_ONLY | 2.1667 | 1.8619 | 1.1115 | 1.7133 | 2.1667 |

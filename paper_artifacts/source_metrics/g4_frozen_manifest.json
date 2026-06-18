@@ -1,0 +1,120 @@
+{
+  "config_id": "paperema_g4_candidate_frozen_e160",
+  "status": "frozen candidate selected after seed0 minimal feature ablation; not pre-declared blind model",
+  "model_class": "anchor_residual_tcn",
+  "encoder": "causal TCN",
+  "input_feature_set": "paper_g4_all_ema",
+  "input_feature_count": 17,
+  "input_features": [
+    "V_corr_raw",
+    "I_raw",
+    "T",
+    "V_corr_raw_ema50",
+    "V_corr_raw_dev_ema50",
+    "V_corr_raw_ema200",
+    "V_corr_raw_dev_ema200",
+    "V_corr_raw_ema800",
+    "V_corr_raw_dev_ema800",
+    "I_raw_ema50",
+    "I_raw_dev_ema50",
+    "I_raw_ema200",
+    "I_raw_dev_ema200",
+    "absI_ema50",
+    "absI_dev_ema50",
+    "absI_ema200",
+    "absI_dev_ema200"
+  ],
+  "train_split": {
+    "profiles": [
+      "DST",
+      "US06",
+      "BJDST"
+    ],
+    "temperatures": [
+      0.0,
+      25.0,
+      45.0
+    ]
+  },
+  "test_split": {
+    "profiles": [
+      "FUDS"
+    ],
+    "temperatures": [
+      0.0,
+      25.0,
+      45.0
+    ]
+  },
+  "epoch_protocol": {
+    "fixed_epoch": 160,
+    "selector": "last_epoch",
+    "fuds_based_selection_after_freeze": false
+  },
+  "model_hyperparameters": {
+    "hidden_size": 128,
+    "layers": 6,
+    "kernel_size": 5,
+    "temp_mode": "moe",
+    "head": "linear",
+    "window_length": 50,
+    "train_stride": 3,
+    "test_stride": 1,
+    "stage2_or_correction": "none",
+    "sequence_training": false
+  },
+  "optimizer_loss": {
+    "optimizer": "AdamW",
+    "lr": 0.0008,
+    "weight_decay": 0.0002,
+    "batch_size": 1024,
+    "huber_beta": 0.02,
+    "lambda_rex": 2.0,
+    "lambda_condinv": 0.02,
+    "temperature_weights": {
+      "0C": 0.8,
+      "25C": 2.2,
+      "45C": 1.0
+    },
+    "anchor_residual_limit": 0.12,
+    "lambda_anchor_loss": 0.1
+  },
+  "normalization_policy": {
+    "function": "soc_decomp/training.py::make_scaled_frames_for_ablation",
+    "fit_scope": "train split frames only",
+    "test_statistics_used": false
+  },
+  "ema_equations": {
+    "index_ema": "EMA_t = alpha * EMA_{t-1} + (1-alpha) * x_t, alpha=exp(-1/tau_index), EMA_0=x_0",
+    "deviation": "x_dev_ema_tau = x_t - EMA_tau(x)_t",
+    "one_sided_causal": true,
+    "centered_window": false,
+    "future_samples_used": false
+  },
+  "r0_vcorr_preprocessing": {
+    "r0_source": "median dV/dI events from train profiles only, by temperature",
+    "v_corr_raw": "causal time EMA of V_raw - I_raw*R0(T), tau=120s",
+    "test_profile_used_for_r0_fit": false,
+    "temperature_specific_r0_caveat": "test temperature selects the corresponding train-derived R0(T)"
+  },
+  "label_construction": {
+    "label_column": "physical/SOC_CC-derived",
+    "formula": "SOC_CC_unclipped = SOC0_OCV_inferred(file) - Q_removed(Ah) / Q_ref_lc_ocv_Ah(temperature); SOC_CC = clip(SOC_CC_unclipped, 0, 1)",
+    "soc0_source": "OCV-inferred per-file start-SOC manifest generated during preprocessing; raw manifest is not bundled in this release.",
+    "note": "SOC labels are supervised targets/evaluation labels, not model inputs."
+  },
+  "strict_no_cc": {
+    "soc_input": false,
+    "soc_cc_input": false,
+    "cumulative_ah_input": false,
+    "absolute_time_or_progress_input": false,
+    "window_local_timestep_input": false,
+    "explicit_soc_state_update": false,
+    "current_usage": "instantaneous and finite-memory causal input, not integrated into a SOC state"
+  },
+  "exploratory_fuds_use": {
+    "fuds_observed_during_development": true,
+    "g4_selected_after_seed0_feature_ablation": true,
+    "paper_wording": "candidate requiring frozen confirmation, not a pre-declared blind model"
+  }
+}

@@ -1,0 +1,37 @@
+variant,seed,epoch,split,temperature_C,drive_cycle,n_windows,MAE_pct,RMSE_pct,bias_pct,diagnostic_test_peek,selector,selector_min_epoch,selector_max_epoch,selected_epoch,selector_score,stage1_ensemble_epochs,protocol_note
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,40,test,0.0,,9658,0.4412913919852915,0.5933111668506053,0.0942414926184114,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,40,test,25.0,,11043,0.4312646374974056,0.6006537682312134,-0.0535011442634038,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,40,test,45.0,,11577,0.2997800425934526,0.3780736143182064,-0.210392513227368,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,60,test,0.0,,9658,0.4239862973360719,0.5131912270608407,-0.0561378984180734,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,60,test,25.0,,11043,0.3864482640248542,0.5980426335432208,-0.1967470407118931,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,60,test,45.0,,11577,0.3599898014248184,0.4462490300799557,-0.3290446810929528,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,80,test,0.0,,9658,0.3971455210260931,0.4587421761750976,0.0052713278930215,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,80,test,25.0,,11043,0.4069970621963801,0.6305946978935689,-0.1038962890302358,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,80,test,45.0,,11577,0.3731021524206739,0.4928525859114588,-0.3236935439788997,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,100,test,0.0,,9658,0.4518994166259071,0.5725757887614895,0.1622945385014796,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,100,test,25.0,,11043,0.5027142402692452,0.6791623793086179,0.1173597033943785,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,100,test,45.0,,11577,0.256901515048125,0.3781887436654038,-0.1684935816089919,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,120,test,0.0,,9658,0.4224123804681319,0.5355459698461045,-0.203887967681707,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,120,test,25.0,,11043,0.4461844870116436,0.7015264811515963,-0.2548027419638053,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,120,test,45.0,,11577,0.4166795489309652,0.5305561655991368,-0.4132020892571361,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,140,test,0.0,,9658,0.4579622445824378,0.5750964542762163,-0.1535785299424775,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,140,test,25.0,,11043,0.5097818722233094,0.7464464680924404,-0.3146577861595551,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,140,test,45.0,,11577,0.4077191621392072,0.5063819242295672,-0.3850335509313494,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,160,test,0.0,,9658,0.448989322600737,0.5938514470462153,-0.0460191407073331,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,160,test,25.0,,11043,0.4589699882749823,0.6817085812990658,-0.1242348484551249,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,160,test,45.0,,11577,0.3797345806241107,0.523906074870014,-0.3223126911999617,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,180,test,0.0,,9658,0.4764826432546243,0.6287367703505148,-0.0947586773937349,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,180,test,25.0,,11043,0.5368439667382275,0.7741220718632905,-0.207377262200975,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,180,test,45.0,,11577,0.4175872385496713,0.5682602004592026,-0.3683128077470856,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,200,test,0.0,,9658,0.489826623537842,0.6643141875361517,-0.0079767270521684,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,200,test,25.0,,11043,0.4609559504847417,0.6266090527383847,-0.066653021131317,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+condinv_tcn6_moe_linear_mmd0p02_trainDST25_selector_base,0,200,test,45.0,,11577,0.3725542051758988,0.5032288130171569,-0.2680249027589282,True,,,,,,,diagnostic checkpoint sweep; selected paper candidate remains epoch 160
+temperature_mean,0,40,test,ALL,,32278,0.3907786906920499,0.5240128498000084,,,,,,,,,unweighted temperature mean
+temperature_mean,0,60,test,ALL,,32278,0.3901414542619148,0.5191609635613391,,,,,,,,,unweighted temperature mean
+temperature_mean,0,80,test,ALL,,32278,0.392414911881049,0.5273964866600418,,,,,,,,,unweighted temperature mean
+temperature_mean,0,100,test,ALL,,32278,0.4038383906477591,0.5433089705785038,,,,,,,,,unweighted temperature mean
+temperature_mean,0,120,test,ALL,,32278,0.42842547213691357,0.5892095388656126,,,,,,,,,unweighted temperature mean
+temperature_mean,0,140,test,ALL,,32278,0.45848775964831817,0.6093082821994079,,,,,,,,,unweighted temperature mean
+temperature_mean,0,160,test,ALL,,32278,0.42923129716660996,0.5998220344050983,,,,,,,,,unweighted temperature mean
+temperature_mean,0,180,test,ALL,,32278,0.4769712828475077,0.6570396808910026,,,,,,,,,unweighted temperature mean
+temperature_mean,0,200,test,ALL,,32278,0.44111225973282747,0.5980506844305644,,,,,,,,,unweighted temperature mean

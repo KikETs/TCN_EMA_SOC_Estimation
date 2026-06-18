@@ -16,7 +16,7 @@ def infer_mamba_stateful_dir() -> Path:
     for p in candidates:
         if (p / "LFP_ABS_SOC").exists():
             return p
-    raise FileNotFoundError("Could not locate a notebook folder with LFP_ABS_SOC.")
+    return Path.cwd()
 
 
 BASE_DIR = infer_mamba_stateful_dir()
