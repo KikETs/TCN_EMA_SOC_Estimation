@@ -214,6 +214,8 @@ def make_figure(data_root: Path, out_path: Path, current_temp: float) -> None:
     fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.52, 0.985))
     fig.subplots_adjust(left=0.065, right=0.99, bottom=0.08, top=0.90, wspace=0.23, hspace=0.24)
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    svg_path = out_path.with_suffix(".svg")
+    fig.savefig(svg_path, format="svg")
     fig.savefig(out_path, dpi=600, pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
     with Image.open(out_path) as img:

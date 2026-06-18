@@ -1,0 +1,10 @@
+feature_group,representative_feature_column,mean_low_frequency_energy_percent,mean_mid_frequency_energy_percent,mean_high_frequency_energy_percent,mean_median_frequency_cycles_per_sample,high_frequency_energy_reduction_vs_reference_percent
+Raw voltage,V_raw,20.78,30.97,48.26,0.019206,0.0
+Corrected voltage,V_corr_raw,97.98,1.94,0.08,0.000977,99.84
+Short voltage EMA,V_corr_raw_ema50,99.56,0.44,0.0,0.000977,98.15
+Long voltage EMA,V_corr_raw_ema800,99.99,0.01,0.0,0.000977,99.94
+Raw current,I_raw,14.88,30.81,54.31,0.024495,0.0
+Short current EMA,I_raw_ema50,66.37,28.87,4.76,0.003662,92.21
+Long current EMA,I_raw_ema200,82.55,15.46,1.98,0.002197,96.68
+Short abs-current EMA,absI_ema50,72.49,22.6,4.91,0.00293,92.7
+Long abs-current EMA,absI_ema200,86.97,11.04,1.99,0.001953,97.11
