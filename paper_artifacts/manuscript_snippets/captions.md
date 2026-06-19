@@ -15,4 +15,5 @@
 - `fig5_epoch_sweep`: Diagnostic checkpoint sweep; the paper candidate remains the frozen epoch-160 setting.
 - `fig6_ema_perturbation_importance`: Inference-only perturbation diagnostic for G4 EMA channels.
 - `fig7_model_class_baselines`: Model-class baselines compared under the same G4 feature protocol.
+- `fig8_region_error_reduction`: Regional error reduction from G0 to G4 across SOC bands, recent absolute-current-history regions, voltage-response-deviation regions, and local V-I ambiguity groups. Negative ΔMAE indicates that the causal EMA representation reduces error relative to the raw corrected-voltage/current/temperature input.
 - `fig_appendix_ema_correlation`: Appendix diagnostic showing EMA correlation caveats with forbidden references.

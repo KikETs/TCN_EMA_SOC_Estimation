@@ -177,7 +177,6 @@ def plot_figure(table: pd.DataFrame, out_png: Path) -> None:
         ax.set_xticks(x)
         ax.set_xticklabels(["0C", "25C", "45C", "Avg."])
         ax.set_ylabel(ylabel)
-        ax.grid(axis="y", alpha=0.18, linewidth=0.5)
         ax.set_axisbelow(True)
     axes_flat[-1].axis("off")
     handles, labels_ = axes_flat[0].get_legend_handles_labels()

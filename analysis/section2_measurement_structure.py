@@ -53,6 +53,22 @@ COLUMN_ALIASES = {
 }
 
 
+def set_manuscript_style() -> None:
+    plt.rcParams.update(
+        {
+            "font.family": "Times New Roman",
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+            "axes.titlesize": 11,
+            "axes.labelsize": 10,
+            "xtick.labelsize": 9,
+            "ytick.labelsize": 9,
+            "legend.fontsize": 8.5,
+            "legend.title_fontsize": 9,
+        }
+    )
+
+
 @dataclass(frozen=True)
 class FileMapping:
     path: Path
@@ -725,7 +741,6 @@ def plot_acf(lag_table: pd.DataFrame, figures: Path) -> None:
         ax.set_xlabel("Lag (samples)")
         ax.set_ylabel("Correlation")
         ax.set_ylim(-0.2, 1.05)
-        ax.grid(alpha=0.25)
     axes[1].legend(title="Profile", fontsize=8)
     save_fig(fig, figures, "fig_s2_time_lag_acf_voltage_current")
 
@@ -737,7 +752,6 @@ def plot_acf(lag_table: pd.DataFrame, figures: Path) -> None:
     ax.set_xlabel("Lag (samples)")
     ax.set_ylabel("Mean autocorrelation")
     ax.set_title("Temperature/profile-averaged autocorrelation")
-    ax.grid(alpha=0.25)
     ax.legend()
     save_fig(fig, figures, "fig_s2_time_lag_acf_summary")
 
@@ -770,7 +784,6 @@ def plot_history_conditioned(summary: pd.DataFrame, figures: Path) -> None:
     ax.set_ylabel("Median SOC IQR (fraction)")
     ax.set_xlabel("")
     ax.set_title("History-conditioned SOC spread")
-    ax.grid(axis="y", alpha=0.25)
     ax.legend(title="Temperature (C)", fontsize=8)
     save_fig(fig, figures, "fig_s2_history_conditioned_soc_spread_reduction")
 
@@ -961,6 +974,7 @@ def write_metadata(
 
 
 def build_section2_package(args: argparse.Namespace) -> None:
+    set_manuscript_style()
     cwd = Path.cwd()
     out_dir = Path(args.out_dir).resolve()
     tables, figures = ensure_dirs(out_dir)

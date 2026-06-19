@@ -3,6 +3,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -28,6 +31,22 @@ FIGURES = [
     "fig7_model_class_baselines",
     "fig_appendix_ema_correlation",
 ]
+
+
+def set_manuscript_figure_style() -> None:
+    plt.rcParams.update(
+        {
+            "font.family": "Times New Roman",
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+            "axes.titlesize": 11,
+            "axes.labelsize": 10,
+            "xtick.labelsize": 9,
+            "ytick.labelsize": 9,
+            "legend.fontsize": 8.5,
+            "legend.title_fontsize": 9,
+        }
+    )
 
 
 def fmt_value(value: object) -> str:
@@ -115,7 +134,6 @@ def bar_by_temp(df: pd.DataFrame, label_col: str, temp_col: str, value_col: str,
     ax.set_ylabel("MAE (%)")
     ax.set_xlabel("")
     ax.legend(title="Temperature (C)", fontsize=8)
-    ax.grid(axis="y", alpha=0.25)
     plt.tight_layout()
     fig_dir.mkdir(parents=True, exist_ok=True)
     plt.savefig(fig_dir / f"{out_stem}.png", dpi=180)
@@ -208,13 +226,13 @@ def build_tables(source: Path, table_dir: Path) -> dict[str, pd.DataFrame]:
 
 
 def build_figures(source: Path, fig_dir: Path) -> None:
+    set_manuscript_figure_style()
     by_temp = pd.read_csv(source / "g4_seed_reproduction_by_temp.csv")
     fig1 = by_temp.groupby("temperature", as_index=False).agg(MAE_pct=("mae_pct", "mean"), MAE_std=("mae_pct", "std"))
     ax = fig1.plot(x="temperature", y="MAE_pct", yerr="MAE_std", kind="bar", legend=False, figsize=(6, 4), capsize=4)
     ax.set_title("Frozen G4 FUDS MAE by Temperature")
     ax.set_ylabel("MAE (%)")
     ax.set_xlabel("Temperature (C)")
-    ax.grid(axis="y", alpha=0.25)
     plt.tight_layout()
     fig_dir.mkdir(parents=True, exist_ok=True)
     plt.savefig(fig_dir / "fig1_main_g4_fuds_mae_by_temp.png", dpi=180)
@@ -238,7 +256,6 @@ def build_figures(source: Path, fig_dir: Path) -> None:
     ax.set_title("Epoch Sweep Diagnostic")
     ax.set_ylabel("MAE (%)")
     ax.set_xlabel("Epoch")
-    ax.grid(alpha=0.25)
     plt.tight_layout()
     plt.savefig(fig_dir / "fig5_epoch_sweep.png", dpi=180)
     plt.savefig(fig_dir / "fig5_epoch_sweep.pdf")
@@ -253,7 +270,6 @@ def build_figures(source: Path, fig_dir: Path) -> None:
     ax.set_title("EMA Perturbation Importance")
     ax.set_xlabel("Delta MAE vs unperturbed (%)")
     ax.set_ylabel("")
-    ax.grid(axis="x", alpha=0.25)
     plt.tight_layout()
     plt.savefig(fig_dir / "fig6_ema_perturbation_importance.png", dpi=180)
     plt.savefig(fig_dir / "fig6_ema_perturbation_importance.pdf")
@@ -271,7 +287,6 @@ def build_figures(source: Path, fig_dir: Path) -> None:
     ax.set_ylabel("Pearson r")
     ax.set_xlabel("")
     ax.tick_params(axis="x", labelrotation=75)
-    ax.grid(axis="y", alpha=0.25)
     plt.tight_layout()
     plt.savefig(fig_dir / "fig_appendix_ema_correlation.png", dpi=180)
     plt.savefig(fig_dir / "fig_appendix_ema_correlation.pdf")
@@ -288,6 +303,7 @@ def write_caption_index(artifact_root: Path) -> None:
         "fig5_epoch_sweep": "Diagnostic checkpoint sweep; the paper candidate remains the frozen epoch-160 setting.",
         "fig6_ema_perturbation_importance": "Inference-only perturbation diagnostic for G4 EMA channels.",
         "fig7_model_class_baselines": "Model-class baselines compared under the same G4 feature protocol.",
+        "fig8_region_error_reduction": "Regional error reduction from G0 to G4 across SOC bands, recent absolute-current-history regions, voltage-response-deviation regions, and local V-I ambiguity groups. Negative \u0394MAE indicates that the causal EMA representation reduces error relative to the raw corrected-voltage/current/temperature input.",
         "fig_appendix_ema_correlation": "Appendix diagnostic showing EMA correlation caveats with forbidden references.",
     }
     for stem in TABLES:
