@@ -27,6 +27,14 @@ ORDER = [
     ("Local V-I ambiguity", "Ambiguous bins"),
 ]
 
+REGION_LABEL_X = {
+    "SOC band": -0.22,
+    "Recent absolute-current history": -0.235,
+    "Voltage-response deviation": -0.235,
+    "Local V-I ambiguity": -0.205,
+}
+ROW_LABEL_X = -0.015
+
 
 def set_manuscript_style() -> None:
     plt.rcParams.update(
@@ -123,12 +131,7 @@ def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
         ax.text(annotation_x, yi, f"\u0394MAE={value:+.3f}", va="center", ha="left", fontsize=8.5)
 
     for region, center in region_centers:
-        if region == "SOC band":
-            x_offset = -0.22
-        elif region == "Local V-I ambiguity":
-            x_offset = -0.18
-        else:
-            x_offset = -0.18
+        x_offset = REGION_LABEL_X.get(region, -0.20)
         ax.text(
             x_offset,
             center,
@@ -141,22 +144,17 @@ def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
         )
 
     ax.set_yticks(y)
-    ytick_labels = [
-        "" if str(region) == "Local V-I ambiguity" else display_group_label(str(group))
-        for region, group in zip(df["region_definition"], df["group"])
-    ]
-    ax.set_yticklabels(ytick_labels)
-    for yi, region, group in zip(y, df["region_definition"], df["group"]):
-        if str(region) == "Local V-I ambiguity":
-            ax.text(
-                -0.015,
-                yi,
-                display_group_label(str(group)),
-                transform=ax.get_yaxis_transform(),
-                ha="right",
-                va="center",
-                fontsize=9,
-            )
+    ax.set_yticklabels([""] * len(y))
+    for yi, group in zip(y, df["group"]):
+        ax.text(
+            ROW_LABEL_X,
+            yi,
+            display_group_label(str(group)),
+            transform=ax.get_yaxis_transform(),
+            ha="right",
+            va="center",
+            fontsize=9,
+        )
     ax.invert_yaxis()
     ax.set_xlabel("MAE (%SOC)")
     ax.set_xlim(0.0, annotation_x + 0.28)
