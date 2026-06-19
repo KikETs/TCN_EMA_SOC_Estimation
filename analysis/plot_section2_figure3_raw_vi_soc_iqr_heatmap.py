@@ -12,6 +12,7 @@ import pandas as pd
 
 
 TEMP_ORDER = (0.0, 25.0, 45.0)
+PANEL_LABELS = ("(a)", "(b)", "(c)")
 
 
 def set_manuscript_style() -> None:
@@ -22,9 +23,9 @@ def set_manuscript_style() -> None:
             "ps.fonttype": 42,
             "axes.titlesize": 13,
             "axes.labelsize": 12,
-            "xtick.labelsize": 10,
-            "ytick.labelsize": 10,
-            "legend.fontsize": 10,
+            "xtick.labelsize": 10.5,
+            "ytick.labelsize": 10.5,
+            "legend.fontsize": 11,
         }
     )
 
@@ -43,7 +44,7 @@ def plot_main_heatmap(details: pd.DataFrame, out_png: Path, out_pdf: Path, min_c
 
     fig, axes = plt.subplots(1, len(TEMP_ORDER), figsize=(11.8, 3.65), sharey=True)
     image = None
-    for ax, temp in zip(axes, TEMP_ORDER):
+    for ax, temp, panel_label in zip(axes, TEMP_ORDER, PANEL_LABELS):
         d = details[details["temperature_C"].eq(temp)]
         pivot = d.pivot_table(
             index="current_bin",
@@ -61,26 +62,28 @@ def plot_main_heatmap(details: pd.DataFrame, out_png: Path, out_pdf: Path, min_c
             vmax=10.0,
         )
         ax.text(
-            0.03,
-            0.94,
-            f"{int(temp)} °C",
+            0.0,
+            1.08,
+            panel_label,
             transform=ax.transAxes,
             ha="left",
-            va="top",
-            fontsize=11,
-            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.5},
+            va="bottom",
+            fontsize=16,
+            fontweight="bold",
+            clip_on=False,
         )
-        ax.set_xlabel("Voltage bin")
         ax.grid(False)
         for spine in ax.spines.values():
             spine.set_linewidth(0.8)
     axes[0].set_ylabel("Current bin")
+    fig.supxlabel("Voltage bin", y=0.065, fontsize=12)
 
     fig.subplots_adjust(left=0.055, right=0.905, bottom=0.20, top=0.86, wspace=0.18)
     if image is not None:
         cbar = fig.colorbar(image, ax=axes, location="right", fraction=0.028, pad=0.035)
-        cbar.set_label("SOC IQR (%SOC)")
+        cbar.set_label("SOC IQR (%SOC)", fontsize=12)
         cbar.set_ticks([0, 2, 4, 6, 8, 10])
+        cbar.ax.tick_params(labelsize=10.5)
 
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=dpi)
