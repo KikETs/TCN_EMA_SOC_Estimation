@@ -1,25 +1,25 @@
-model_id,description,seed,temperature_C,MAE_pct,RMSE_pct,n_windows,approx_trainable_params,run_status,source_prefix
-endpoint_mlp,"endpoint MLP, no temporal order",0,0.0,0.7300878723947917,0.9689391680817668,9658,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
-endpoint_mlp,"endpoint MLP, no temporal order",0,25.0,1.4306825344884009,1.83614651346008,11043,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
-endpoint_mlp,"endpoint MLP, no temporal order",0,45.0,0.7036146685549289,1.0949547489851443,11577,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
-window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,0.0,0.6970044544059609,0.8896976161861624,9658,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
-window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,25.0,0.9339887519618107,1.1845772773232348,11043,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
-window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,45.0,0.6377849058237082,0.8092296917370221,11577,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
-gru_h128_l1,GRU h128 layer=1,0,0.0,0.7757503661982982,1.035533717185542,9658,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
-gru_h128_l1,GRU h128 layer=1,0,25.0,1.0855061112134168,1.3063339810652297,11043,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
-gru_h128_l1,GRU h128 layer=1,0,45.0,0.5521154757906058,0.7436282225468269,11577,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
-lstm_h128_l1,LSTM h128 layer=1,0,0.0,0.5828806370971957,0.7378724377627934,9658,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
-lstm_h128_l1,LSTM h128 layer=1,0,25.0,0.8055904470124365,1.0158725030963256,11043,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
-lstm_h128_l1,LSTM h128 layer=1,0,45.0,0.4657467474043241,0.6786946258292265,11577,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
-tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,0.0,0.4362023723473532,0.5868070685259819,9658,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
-tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,25.0,0.5374746824383876,0.8262679574554531,11043,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
-tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,45.0,0.3643776454630629,0.5001930953469976,11577,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
-tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,0.0,0.4477543005367618,0.5966793615112083,9658,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160
-tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,25.0,0.4979000892110636,0.7588789636910883,11043,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160
-tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,45.0,0.3796820866275948,0.52335401199754,11577,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160
-endpoint_mlp,"endpoint MLP, no temporal order",0,ALL,0.9547950251460405,1.3000134768423306,32278,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
-gru_h128_l1,GRU h128 layer=1,0,ALL,0.8044573177341069,1.0284986402658662,32278,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
-lstm_h128_l1,LSTM h128 layer=1,0,ALL,0.6180726105046521,0.8108131888961152,32278,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
-tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,ALL,0.44177882545847336,0.6263041123999455,32278,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160
-tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,ALL,0.4460182334162679,0.6377560404428109,32278,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
-window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,ALL,0.7562593707304933,0.9611681950821399,32278,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
+model_id,description,seed,temperature_C,MAE_pct,RMSE_pct,MaxAE_pct,n_windows,approx_trainable_params,run_status,source_prefix
+endpoint_mlp,"endpoint MLP, no temporal order",0,0.0,0.7300878854421206,0.9689391907471854,5.247167999999999,9658,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
+endpoint_mlp,"endpoint MLP, no temporal order",0,25.0,1.430682561794802,1.8361465218513278,7.059105999999998,11043,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
+endpoint_mlp,"endpoint MLP, no temporal order",0,45.0,0.7036146510149435,1.0949547714212586,5.967376000000002,11577,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
+endpoint_mlp,"endpoint MLP, no temporal order",0,ALL,0.9547950327506219,1.300013494673257,6.091216666666667,32278,35457,DONE,paperema_modelclass_endpoint_mlp_seed0_e160
+window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,0.0,0.6970044570925658,0.8896976299232093,3.057904,9658,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
+window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,25.0,0.9339887885447794,1.1845773181662187,5.052009999999996,11043,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
+window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,45.0,0.6377849037315366,0.809229699618624,3.4853700000000014,11577,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
+window_summary_mlp,window summary MLP: endpoint/mean/std/delta,0,ALL,0.7562593831229606,0.9611682159026841,3.865094666666666,32278,41985,DONE,paperema_modelclass_window_summary_mlp_seed0_e160
+gru_h128_l1,GRU h128 layer=1,0,0.0,0.7757503699834334,1.0355337330604455,3.2240430000000044,9658,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
+gru_h128_l1,GRU h128 layer=1,0,25.0,1.0855061205107308,1.3063339718334581,3.753896999999999,11043,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
+gru_h128_l1,GRU h128 layer=1,0,45.0,0.5521154466960352,0.7436281950026314,3.0419909999999994,11577,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
+gru_h128_l1,GRU h128 layer=1,0,ALL,0.8044573123967331,1.028498633298845,3.339977000000001,32278,98688,DONE,paperema_modelclass_gru_h128_l1_seed0_e160
+lstm_h128_l1,LSTM h128 layer=1,0,0.0,0.582880658697453,0.7378724483602017,3.2085299999999983,9658,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
+lstm_h128_l1,LSTM h128 layer=1,0,25.0,0.8055904895137191,1.0158725488113332,4.107689999999997,11043,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
+lstm_h128_l1,LSTM h128 layer=1,0,45.0,0.4657467521896865,0.6786946059463356,4.38877,11577,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
+lstm_h128_l1,LSTM h128 layer=1,0,ALL,0.618072633466953,0.8108132010392901,3.9016633333333317,32278,131584,DONE,paperema_modelclass_lstm_h128_l1_seed0_e160
+tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,0.0,0.43620234958583554,0.5868070643982854,1.986149000000001,9658,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
+tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,25.0,0.5374746951734131,0.8262679570464502,3.5063005,11043,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
+tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,45.0,0.3643776280383519,0.5001930811649374,1.6487929999999984,11577,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
+tcn_h128_l6_no_moe,anchor-residual TCN h128 l6 without temp-MoE,0,ALL,0.44601822426586685,0.6377560342032244,2.3804141666666667,32278,492288,DONE,paperema_modelclass_tcn_h128_l6_no_moe_seed0_e160
+tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,0.0,0.447754297473597,0.596679348011858,2.4550989999999997,9658,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160
+tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,25.0,0.4979001089921218,0.7588789856227958,3.4232435999999993,11043,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160
+tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,45.0,0.37968207871642046,0.5233540022717247,1.7415470000000015,11577,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160
+tcn_h128_l6_moe_g4,"anchor-residual TCN h128 l6 with temp-MoE, G4",0,ALL,0.4417788283940465,0.6263041119687928,2.5399632000000003,32278,492806,DONE,paperema_modelclass_tcn_h128_l6_moe_g4_seed0_e160

@@ -83,6 +83,26 @@ def pivot_temp(df: pd.DataFrame, index_cols: list[str], value_col: str, temp_col
     return piv
 
 
+def build_model_class_table(baselines: pd.DataFrame) -> pd.DataFrame:
+    temp_rows = baselines[baselines["temperature_C"].astype(str).ne("ALL")].copy()
+    temp_rows["temperature_C"] = numeric_temp(temp_rows, "temperature_C")
+    temp_rows = temp_rows.dropna(subset=["temperature_C"])
+    index_cols = ["model_id", "description", "approx_trainable_params"]
+    out = temp_rows.pivot_table(index=index_cols, columns="temperature_C", values="MAE_pct", aggfunc="mean").reset_index()
+    out.columns = [f"{int(c)}C_MAE_pct" if isinstance(c, (float, np.floating)) else str(c) for c in out.columns]
+    temp_mae_cols = [c for c in out.columns if c.endswith("C_MAE_pct")]
+    out["temperature_mean_MAE_pct"] = out[temp_mae_cols].mean(axis=1)
+    out["worst_temp_MAE_pct"] = out[temp_mae_cols].max(axis=1)
+
+    for metric, out_col in [("RMSE_pct", "temperature_mean_RMSE_pct"), ("MaxAE_pct", "temperature_mean_MaxAE_pct")]:
+        if metric in temp_rows.columns:
+            metric_mean = temp_rows.groupby(index_cols, as_index=False)[metric].mean().rename(columns={metric: out_col})
+            out = out.merge(metric_mean, on=index_cols, how="left")
+        else:
+            out[out_col] = np.nan
+    return out
+
+
 def bar_by_temp(df: pd.DataFrame, label_col: str, temp_col: str, value_col: str, title: str, out_stem: str, fig_dir: Path) -> None:
     work = df.copy()
     work[temp_col] = numeric_temp(work, temp_col)
@@ -171,9 +191,7 @@ def build_tables(source: Path, table_dir: Path) -> dict[str, pd.DataFrame]:
     tables[TABLES[4]] = t5
 
     baselines = pd.read_csv(source / "g4_model_class_baselines.csv")
-    t6 = pivot_temp(baselines, ["model_id", "description", "approx_trainable_params"], "MAE_pct", "temperature_C").sort_values(
-        ["tempmean_MAE_pct", "model_id"]
-    )
+    t6 = build_model_class_table(baselines).sort_values(["temperature_mean_MAE_pct", "model_id"])
     tables[TABLES[5]] = t6
 
     forbidden = pd.read_csv(source / "forbidden_reference_baselines.csv")
@@ -299,4 +317,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
