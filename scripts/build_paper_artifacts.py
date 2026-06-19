@@ -122,17 +122,46 @@ def build_model_class_table(baselines: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def bar_by_temp(df: pd.DataFrame, label_col: str, temp_col: str, value_col: str, title: str, out_stem: str, fig_dir: Path) -> None:
+def format_temp_label(value: object) -> str:
+    try:
+        temp = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    label = f"{int(temp)}" if float(temp).is_integer() else f"{temp:g}"
+    return f"{label} \u00b0C"
+
+
+def bar_by_temp(
+    df: pd.DataFrame,
+    label_col: str,
+    temp_col: str,
+    value_col: str,
+    title: str,
+    out_stem: str,
+    fig_dir: Path,
+    *,
+    large_font: bool = False,
+    legend_loc: str = "upper right",
+    format_temp_labels: bool = False,
+) -> None:
     work = df.copy()
     work[temp_col] = numeric_temp(work, temp_col)
     work = work.dropna(subset=[temp_col])
     if work.empty:
         return
     pivot = work.pivot_table(index=label_col, columns=temp_col, values=value_col, aggfunc="mean")
-    ax = pivot.plot(kind="bar", figsize=(9, 4.8), width=0.82)
+    if format_temp_labels:
+        pivot = pivot.rename(columns={col: format_temp_label(col) for col in pivot.columns})
+    figsize = (9.8, 5.2) if large_font else (9, 4.8)
+    ax = pivot.plot(kind="bar", figsize=figsize, width=0.82)
     ax.set_ylabel("MAE (%)")
     ax.set_xlabel("")
-    ax.legend(fontsize=8)
+    if large_font:
+        ax.yaxis.label.set_size(13)
+        ax.tick_params(axis="both", labelsize=12)
+        ax.legend(fontsize=12, loc=legend_loc)
+    else:
+        ax.legend(fontsize=8, loc=legend_loc)
     plt.tight_layout()
     fig_dir.mkdir(parents=True, exist_ok=True)
     plt.savefig(fig_dir / f"{out_stem}.png", dpi=180)
@@ -238,14 +267,45 @@ def build_figures(source: Path, fig_dir: Path) -> None:
     plt.close()
 
     ablation = pd.read_csv(source / "feature_ablation_reanalysis.csv")
-    bar_by_temp(ablation, "ablation_group", "temperature", "metric_value", "Feature Ablation MAE", "fig2_feature_ablation_by_temp", fig_dir)
+    bar_by_temp(
+        ablation,
+        "ablation_group",
+        "temperature",
+        "metric_value",
+        "Feature Ablation MAE",
+        "fig2_feature_ablation_by_temp",
+        fig_dir,
+        large_font=True,
+        format_temp_labels=True,
+    )
 
     tau = pd.read_csv(source / "ema_tau_group_sweep.csv")
-    bar_by_temp(tau, "group_id", "temperature_C", "MAE_pct", "EMA Group Sweep MAE", "fig3_ema_group_sweep_by_temp", fig_dir)
+    bar_by_temp(
+        tau,
+        "group_id",
+        "temperature_C",
+        "MAE_pct",
+        "EMA Group Sweep MAE",
+        "fig3_ema_group_sweep_by_temp",
+        fig_dir,
+        large_font=True,
+        legend_loc="upper left",
+        format_temp_labels=True,
+    )
 
     rot = pd.read_csv(source / "g4_profile_rotation_by_seed_temp.csv")
     rot["rotation_label"] = rot["rotation_id"] + ": " + rot["test_profile_rotation"]
-    bar_by_temp(rot, "rotation_label", "temperature_C", "MAE_pct", "Profile Rotation MAE", "fig4_profile_rotation_by_temp", fig_dir)
+    bar_by_temp(
+        rot,
+        "rotation_label",
+        "temperature_C",
+        "MAE_pct",
+        "Profile Rotation MAE",
+        "fig4_profile_rotation_by_temp",
+        fig_dir,
+        large_font=True,
+        format_temp_labels=True,
+    )
 
     epoch = pd.read_csv(source / "g4_epoch_sweep.csv")
     epoch["temperature_C"] = numeric_temp(epoch, "temperature_C")
