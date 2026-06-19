@@ -362,16 +362,16 @@ def plot_temperature_representatives(
         va="bottom",
         fontsize=8.5,
     )
-    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.20, top=0.86)
+    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.20, top=0.875)
     for col in range(ncols):
         pos = axes[0, col].get_position()
         fig.text(
             pos.x0,
-            0.945,
+            pos.y1 + 0.006,
             f"({chr(ord('a') + col)})",
             ha="left",
-            va="top",
-            fontsize=10,
+            va="bottom",
+            fontsize=12,
             fontweight="bold",
         )
     out_png.parent.mkdir(parents=True, exist_ok=True)
