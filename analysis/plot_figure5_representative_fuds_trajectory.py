@@ -9,6 +9,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 import numpy as np
 import pandas as pd
 
@@ -25,6 +26,7 @@ PREFERRED_PATTERNS = (
     "paperema_g4_frozen_seed12_e160_seed1*base_test_prediction_rows.csv*",
     "paperema_g4_frozen_seed12_e160_seed2*base_test_prediction_rows.csv*",
 )
+ZOOM_WINDOW_POINTS = 1000
 
 
 def set_manuscript_style() -> None:
@@ -228,6 +230,83 @@ def x_axis_for(frame: pd.DataFrame) -> tuple[pd.Series, str]:
     return pd.Series(np.arange(len(frame)), index=frame.index), "Sample index"
 
 
+def zoom_slice_around_max_error(abs_error_pct: pd.Series, window_points: int = ZOOM_WINDOW_POINTS) -> slice:
+    values = pd.to_numeric(abs_error_pct, errors="coerce").reset_index(drop=True)
+    if values.empty or values.isna().all():
+        return slice(0, 0)
+    max_pos = int(values.idxmax())
+    n_rows = int(len(values))
+    width = min(int(window_points), n_rows)
+    start = max(0, max_pos - width // 2)
+    end = min(n_rows, start + width)
+    start = max(0, end - width)
+    return slice(start, end)
+
+
+def add_max_error_inset(
+    ax: plt.Axes,
+    x: pd.Series,
+    y_true_pct: pd.Series,
+    y_pred_pct: pd.Series,
+    abs_error_pct: pd.Series,
+) -> tuple[float, int]:
+    zoom_slice = zoom_slice_around_max_error(abs_error_pct)
+    if zoom_slice.stop <= zoom_slice.start:
+        return float("nan"), 0
+
+    x_zoom = pd.to_numeric(x.reset_index(drop=True).iloc[zoom_slice], errors="coerce")
+    y_true_zoom = pd.to_numeric(y_true_pct.reset_index(drop=True).iloc[zoom_slice], errors="coerce")
+    y_pred_zoom = pd.to_numeric(y_pred_pct.reset_index(drop=True).iloc[zoom_slice], errors="coerce")
+    abs_zoom = pd.to_numeric(abs_error_pct.reset_index(drop=True).iloc[zoom_slice], errors="coerce")
+    valid = x_zoom.notna() & y_true_zoom.notna() & y_pred_zoom.notna()
+    if not bool(valid.any()):
+        return float("nan"), 0
+
+    x_zoom = x_zoom[valid]
+    y_true_zoom = y_true_zoom[valid]
+    y_pred_zoom = y_pred_zoom[valid]
+    abs_zoom = abs_zoom[valid]
+    y_min = float(min(y_true_zoom.min(), y_pred_zoom.min()))
+    y_max = float(max(y_true_zoom.max(), y_pred_zoom.max()))
+    y_pad = max((y_max - y_min) * 0.12, 0.12)
+    x_min = float(x_zoom.min())
+    x_max = float(x_zoom.max())
+    max_error = float(abs_zoom.max())
+
+    rect = Rectangle(
+        (x_min, y_min - y_pad),
+        max(x_max - x_min, 1e-9),
+        (y_max - y_min) + 2.0 * y_pad,
+        fill=False,
+        edgecolor="0.25",
+        linewidth=0.55,
+        linestyle="-",
+        zorder=5,
+    )
+    ax.add_patch(rect)
+
+    inset = ax.inset_axes([0.045, 0.065, 0.42, 0.42])
+    inset.plot(x_zoom, y_true_zoom, color="black", linewidth=0.75)
+    inset.plot(x_zoom, y_pred_zoom, color="#2F6FAE", linewidth=0.72)
+    inset.set_xlim(x_min, x_max)
+    inset.set_ylim(y_min - y_pad, y_max + y_pad)
+    inset.tick_params(axis="both", labelsize=6, length=2.0, pad=1.0)
+    for spine in inset.spines.values():
+        spine.set_linewidth(0.55)
+        spine.set_edgecolor("0.25")
+    inset.text(
+        0.04,
+        0.95,
+        f"max err. {max_error:.2f}",
+        transform=inset.transAxes,
+        ha="left",
+        va="top",
+        fontsize=6.4,
+        bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.2},
+    )
+    return max_error, int(len(x_zoom))
+
+
 def plot_representative(frame: pd.DataFrame, selected: pd.Series, target_mae_pct: float, out_png: Path, out_pdf: Path) -> None:
     set_manuscript_style()
     x, xlabel = x_axis_for(frame)
@@ -269,14 +348,6 @@ def plot_representative(frame: pd.DataFrame, selected: pd.Series, target_mae_pct
     for ax in axes:
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-    fig.text(
-        0.995,
-        0.012,
-        f"overall temp-mean MAE={target_mae_pct:.3f} %SOC",
-        ha="right",
-        va="bottom",
-        fontsize=8.5,
-    )
     fig.subplots_adjust(left=0.105, right=0.985, bottom=0.12, top=0.98)
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=600)
@@ -314,6 +385,7 @@ def plot_temperature_representatives(
         axes = np.array(axes).reshape(2, 1)
 
     bottom_max = 0.0
+    inset_rows = []
     for col, selected in selected_by_temp.iterrows():
         frame = selected_frame(predictions, selected)
         x, xlabel = x_axis_for(frame)
@@ -328,6 +400,20 @@ def plot_temperature_representatives(
         ax_soc.plot(plot_frame["_x"], y_true_pct, color="black", linewidth=1.0, label="Ground truth")
         ax_soc.plot(plot_frame["_x"], y_pred_pct, color="#2F6FAE", linewidth=0.95, label="G4 prediction")
         ax_err.plot(plot_frame["_x"], abs_error_pct, color="#8F3B32", linewidth=0.8)
+        max_error, zoom_points = add_max_error_inset(
+            ax_soc,
+            plot_frame["_x"],
+            y_true_pct,
+            y_pred_pct,
+            abs_error_pct,
+        )
+        inset_rows.append(
+            {
+                "temperature_C": float(selected["temperature"]),
+                "max_error_pct": max_error,
+                "zoom_points": zoom_points,
+            }
+        )
         ax_soc.text(
             0.98,
             0.95,
@@ -354,15 +440,7 @@ def plot_temperature_representatives(
         err_ylim = np.ceil(bottom_max * 10.0) / 10.0
         for ax in axes[1, :]:
             ax.set_ylim(0.0, err_ylim)
-    fig.text(
-        0.995,
-        0.012,
-        f"overall temp-mean MAE={target_overall_mae_pct:.3f} %SOC",
-        ha="right",
-        va="bottom",
-        fontsize=8.5,
-    )
-    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.20, top=0.875)
+    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.18, top=0.875)
     for col in range(ncols):
         pos = axes[0, col].get_position()
         fig.text(
@@ -378,6 +456,11 @@ def plot_temperature_representatives(
     fig.savefig(out_png, dpi=600)
     fig.savefig(out_pdf)
     plt.close(fig)
+    for row in inset_rows:
+        print(
+            f"Zoom inset {format_temp(row['temperature_C'])}: "
+            f"max_error_pct={row['max_error_pct']:.6f}, zoom_points={row['zoom_points']}"
+        )
 
 
 def parse_args() -> argparse.Namespace:
