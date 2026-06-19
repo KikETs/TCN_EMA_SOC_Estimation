@@ -152,14 +152,18 @@ def bar_by_temp(
     pivot = work.pivot_table(index=label_col, columns=temp_col, values=value_col, aggfunc="mean")
     if format_temp_labels:
         pivot = pivot.rename(columns={col: format_temp_label(col) for col in pivot.columns})
-    figsize = (9.8, 5.2) if large_font else (9, 4.8)
+    figsize = (11.6, 5.6) if large_font else (9, 4.8)
     ax = pivot.plot(kind="bar", figsize=figsize, width=0.82)
     ax.set_ylabel("MAE (%)")
     ax.set_xlabel("")
     if large_font:
-        ax.yaxis.label.set_size(13)
-        ax.tick_params(axis="both", labelsize=12)
-        ax.legend(fontsize=12, loc=legend_loc)
+        ax.yaxis.label.set_size(16)
+        ax.tick_params(axis="both", labelsize=15)
+        ax.tick_params(axis="x", labelrotation=0)
+        for label in ax.get_xticklabels():
+            label.set_rotation(0)
+            label.set_ha("center")
+        ax.legend(fontsize=15, loc=legend_loc)
     else:
         ax.legend(fontsize=8, loc=legend_loc)
     plt.tight_layout()
