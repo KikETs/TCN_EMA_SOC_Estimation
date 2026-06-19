@@ -15,6 +15,7 @@ import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SUMMARY_CSV = REPO_ROOT / "paper_artifacts" / "source_metrics" / "g4_seed_reproduction_summary.csv"
+BY_TEMP_CSV = REPO_ROOT / "paper_artifacts" / "source_metrics" / "g4_seed_reproduction_by_temp.csv"
 OUT_PNG = REPO_ROOT / "paper_artifacts" / "figures" / "fig5_representative_fuds_soc_trajectory.png"
 OUT_PDF = REPO_ROOT / "paper_artifacts" / "figures" / "fig5_representative_fuds_soc_trajectory.pdf"
 DEFAULT_OVERALL_TEMP_MEAN_MAE = 0.41889356670972
@@ -53,6 +54,19 @@ def target_overall_mae(summary_csv: Path) -> float:
     return float(value.iloc[0]) if not value.empty else DEFAULT_OVERALL_TEMP_MEAN_MAE
 
 
+def target_mae_by_temperature(by_temp_csv: Path, fallback_overall: float) -> dict[float, float]:
+    if not by_temp_csv.exists():
+        return {}
+    by_temp = pd.read_csv(by_temp_csv)
+    required = {"temperature", "mae_pct"}
+    if not required.issubset(by_temp.columns):
+        return {}
+    by_temp["temperature"] = pd.to_numeric(by_temp["temperature"], errors="coerce")
+    by_temp["mae_pct"] = pd.to_numeric(by_temp["mae_pct"], errors="coerce")
+    targets = by_temp.dropna(subset=["temperature", "mae_pct"]).groupby("temperature")["mae_pct"].mean().to_dict()
+    return {float(temp): float(mae) for temp, mae in targets.items()} or {np.nan: fallback_overall}
+
+
 def parse_seed(path: Path, frame: pd.DataFrame | None = None) -> int | None:
     if frame is not None and "seed" in frame.columns:
         values = pd.to_numeric(frame["seed"], errors="coerce").dropna().unique()
@@ -60,6 +74,10 @@ def parse_seed(path: Path, frame: pd.DataFrame | None = None) -> int | None:
             return int(values[0])
     matches = re.findall(r"_seed(\d+)(?:_|$)", path.name)
     return int(matches[-1]) if matches else None
+
+
+def format_temp(temp: float) -> str:
+    return f"{int(temp) if float(temp).is_integer() else temp:g} \u00b0C"
 
 
 def search_roots(extra_roots: list[str]) -> list[Path]:
@@ -114,6 +132,12 @@ def read_prediction_rows(path: Path) -> pd.DataFrame:
         frame = frame[frame["file_name"].astype(str).str.upper().str.contains("FUDS")].copy()
     if frame.empty:
         raise ValueError(f"{path} does not contain FUDS test prediction rows.")
+    if "trajectory_id" not in frame.columns:
+        frame["trajectory_id"] = frame["file_name"] if "file_name" in frame.columns else "trajectory"
+    if "file_name" not in frame.columns:
+        frame["file_name"] = frame["trajectory_id"]
+    if "temperature" not in frame.columns:
+        frame["temperature"] = np.nan
     frame["source_prediction_file"] = path.as_posix()
     seed = parse_seed(path, frame)
     frame["seed"] = -1 if seed is None else seed
@@ -146,6 +170,43 @@ def choose_representative(predictions: pd.DataFrame, target_mae_pct: float) -> t
         ["distance_to_overall_tempmean_MAE", "trajectory_MAE_pct", "seed", "trajectory_id"]
     ).reset_index(drop=True)
     return trajectory_metrics.iloc[0], trajectory_metrics
+
+
+def trajectory_metric_table(predictions: pd.DataFrame) -> pd.DataFrame:
+    work = predictions.copy()
+    if "trajectory_id" not in work.columns:
+        work["trajectory_id"] = work.get("file_name", pd.Series(["trajectory"] * len(work), index=work.index))
+    if "file_name" not in work.columns:
+        work["file_name"] = work["trajectory_id"]
+    if "temperature" not in work.columns:
+        work["temperature"] = np.nan
+    work["temperature"] = pd.to_numeric(work["temperature"], errors="coerce")
+
+    group_cols = ["seed", "trajectory_id", "file_name", "temperature", "source_prediction_file"]
+    return (
+        work.groupby(group_cols, dropna=False)
+        .agg(
+            trajectory_MAE_pct=("abs_error_fraction", lambda s: float(s.mean() * 100.0)),
+            n_points=("abs_error_fraction", "size"),
+        )
+        .reset_index()
+        .sort_values(["temperature", "seed", "trajectory_id"])
+        .reset_index(drop=True)
+    )
+
+
+def choose_representatives_by_temperature(predictions: pd.DataFrame, target_by_temp: dict[float, float]) -> pd.DataFrame:
+    trajectory_metrics = trajectory_metric_table(predictions)
+    selected: list[pd.Series] = []
+    for temp, group in trajectory_metrics.groupby("temperature", sort=True):
+        target = target_by_temp.get(float(temp), float(group["trajectory_MAE_pct"].mean()))
+        candidates = group.copy()
+        candidates["target_temperature_MAE_pct"] = target
+        candidates["distance_to_temperature_MAE"] = (candidates["trajectory_MAE_pct"] - target).abs()
+        selected.append(
+            candidates.sort_values(["distance_to_temperature_MAE", "trajectory_MAE_pct", "seed", "trajectory_id"]).iloc[0]
+        )
+    return pd.DataFrame(selected).sort_values("temperature").reset_index(drop=True)
 
 
 def x_axis_for(frame: pd.DataFrame) -> tuple[pd.Series, str]:
@@ -223,6 +284,91 @@ def plot_representative(frame: pd.DataFrame, selected: pd.Series, target_mae_pct
     plt.close(fig)
 
 
+def selected_frame(predictions: pd.DataFrame, selected: pd.Series) -> pd.DataFrame:
+    mask = (
+        predictions["seed"].eq(selected["seed"])
+        & predictions["trajectory_id"].astype(str).eq(str(selected["trajectory_id"]))
+        & predictions["file_name"].astype(str).eq(str(selected["file_name"]))
+        & predictions["source_prediction_file"].eq(str(selected["source_prediction_file"]))
+    )
+    return predictions[mask].copy()
+
+
+def plot_temperature_representatives(
+    predictions: pd.DataFrame,
+    selected_by_temp: pd.DataFrame,
+    target_overall_mae_pct: float,
+    out_png: Path,
+    out_pdf: Path,
+) -> None:
+    set_manuscript_style()
+    ncols = len(selected_by_temp)
+    fig, axes = plt.subplots(
+        2,
+        ncols,
+        figsize=(10.2, 5.1),
+        sharey="row",
+        gridspec_kw={"height_ratios": [2.15, 1.0], "hspace": 0.08, "wspace": 0.18},
+    )
+    if ncols == 1:
+        axes = np.array(axes).reshape(2, 1)
+
+    bottom_max = 0.0
+    for col, selected in selected_by_temp.iterrows():
+        frame = selected_frame(predictions, selected)
+        x, xlabel = x_axis_for(frame)
+        plot_frame = frame.assign(_x=x).dropna(subset=["_x"]).sort_values("_x")
+        y_true_pct = pd.to_numeric(plot_frame["y_true"], errors="coerce") * 100.0
+        y_pred_pct = pd.to_numeric(plot_frame["y_pred"], errors="coerce") * 100.0
+        abs_error_pct = (y_pred_pct - y_true_pct).abs()
+        bottom_max = max(bottom_max, float(abs_error_pct.max()))
+
+        ax_soc = axes[0, col]
+        ax_err = axes[1, col]
+        ax_soc.plot(plot_frame["_x"], y_true_pct, color="black", linewidth=1.0, label="Ground truth")
+        ax_soc.plot(plot_frame["_x"], y_pred_pct, color="#2F6FAE", linewidth=0.95, label="G4 prediction")
+        ax_err.plot(plot_frame["_x"], abs_error_pct, color="#8F3B32", linewidth=0.8)
+        ax_soc.text(
+            0.02,
+            0.95,
+            f"{format_temp(float(selected['temperature']))}\n"
+            f"seed {int(selected['seed'])}, MAE={float(selected['trajectory_MAE_pct']):.3f} %SOC",
+            transform=ax_soc.transAxes,
+            ha="left",
+            va="top",
+            fontsize=8.5,
+            bbox={"facecolor": "white", "edgecolor": "0.75", "linewidth": 0.35, "pad": 2.8},
+        )
+        if col == 0:
+            ax_soc.set_ylabel("SOC (%SOC)")
+            ax_err.set_ylabel("Abs. error\n(%SOC)")
+        ax_err.set_xlabel(xlabel)
+        ax_soc.tick_params(labelbottom=False)
+        for ax in (ax_soc, ax_err):
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, loc="upper center", ncol=2, bbox_to_anchor=(0.52, 0.995))
+    if bottom_max > 0:
+        err_ylim = np.ceil(bottom_max * 10.0) / 10.0
+        for ax in axes[1, :]:
+            ax.set_ylim(0.0, err_ylim)
+    fig.text(
+        0.995,
+        0.012,
+        f"overall temp-mean MAE={target_overall_mae_pct:.3f} %SOC",
+        ha="right",
+        va="bottom",
+        fontsize=8.5,
+    )
+    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.13, top=0.90)
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_png, dpi=600)
+    fig.savefig(out_pdf)
+    plt.close(fig)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Plot representative frozen G4 FUDS SOC trajectory.")
     parser.add_argument("--prediction-root", action="append", default=[], help="Additional directory to search for prediction rows.")
@@ -235,6 +381,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     target_mae_pct = target_overall_mae(SUMMARY_CSV)
+    target_by_temp = target_mae_by_temperature(BY_TEMP_CSV, target_mae_pct)
     paths = discover_prediction_files(args.prediction_root, args.prediction_files)
     if not paths:
         raise FileNotFoundError(
@@ -244,34 +391,30 @@ def main() -> int:
 
     frames = [read_prediction_rows(path) for path in paths]
     predictions = pd.concat(frames, ignore_index=True)
-    selected, trajectory_metrics = choose_representative(predictions, target_mae_pct)
+    selected_by_temp = choose_representatives_by_temperature(predictions, target_by_temp)
+    plot_temperature_representatives(predictions, selected_by_temp, target_mae_pct, Path(args.out_png), Path(args.out_pdf))
 
-    mask = (
-        predictions["seed"].eq(selected["seed"])
-        & predictions["trajectory_id"].astype(str).eq(str(selected["trajectory_id"]))
-        & predictions["file_name"].astype(str).eq(str(selected["file_name"]))
-        & predictions["source_prediction_file"].eq(str(selected["source_prediction_file"]))
-    )
-    representative = predictions[mask].copy()
-    plot_representative(representative, selected, target_mae_pct, Path(args.out_png), Path(args.out_pdf))
-
-    print("Selected representative FUDS trajectory")
-    print(f"- seed: {int(selected['seed'])}")
-    print(f"- trajectory_id: {selected['trajectory_id']}")
-    print(f"- file_name: {selected['file_name']}")
-    print(f"- temperature: {float(selected['temperature']):g}C")
-    print(f"- trajectory_MAE_pct: {float(selected['trajectory_MAE_pct']):.6f}")
-    print(f"- overall_temperature_mean_MAE_pct: {target_mae_pct:.6f}")
-    print(f"- distance_to_overall_tempmean_MAE: {float(selected['distance_to_overall_tempmean_MAE']):.6f}")
-    print(f"- n_points: {int(selected['n_points'])}")
-    print(f"- source_prediction_file: {Path(str(selected['source_prediction_file'])).name}")
+    print("Selected temperature-wise representative FUDS trajectories")
+    for _, selected in selected_by_temp.iterrows():
+        print(
+            f"- {format_temp(float(selected['temperature']))}: seed {int(selected['seed'])}, "
+            f"{selected['trajectory_id']}, trajectory_MAE_pct={float(selected['trajectory_MAE_pct']):.6f}, "
+            f"target_temperature_MAE_pct={float(selected['target_temperature_MAE_pct']):.6f}, "
+            f"distance={float(selected['distance_to_temperature_MAE']):.6f}, n_points={int(selected['n_points'])}"
+        )
+        print(f"  source_prediction_file: {Path(str(selected['source_prediction_file'])).name}")
     print()
-    print("Top trajectory candidates")
+    print("All trajectory candidates")
+    trajectory_metrics = trajectory_metric_table(predictions)
+    trajectory_metrics["target_temperature_MAE_pct"] = trajectory_metrics["temperature"].map(target_by_temp)
+    trajectory_metrics["distance_to_temperature_MAE"] = (
+        trajectory_metrics["trajectory_MAE_pct"] - trajectory_metrics["target_temperature_MAE_pct"]
+    ).abs()
     print(
         trajectory_metrics[
-            ["seed", "trajectory_id", "temperature", "trajectory_MAE_pct", "distance_to_overall_tempmean_MAE", "n_points"]
+            ["seed", "trajectory_id", "temperature", "trajectory_MAE_pct", "target_temperature_MAE_pct", "distance_to_temperature_MAE", "n_points"]
         ]
-        .head(9)
+        .sort_values(["temperature", "distance_to_temperature_MAE"])
         .to_string(index=False, float_format=lambda value: f"{value:.6f}")
     )
     print()
