@@ -19,6 +19,7 @@ def main() -> int:
     p.add_argument("--config", default="configs/g4_frozen.yaml")
     p.add_argument("--seeds", default="", help="Optional override, for example 0 or 0,1,2.")
     p.add_argument("--epochs", type=int, default=0, help="Optional override. Default uses fixed_epoch from YAML.")
+    p.add_argument("--loss-kind", choices=["huber", "mse"], default="", help="Optional supervised loss override.")
     p.add_argument("--save-predictions", action="store_true")
     args = p.parse_args()
 
@@ -35,6 +36,9 @@ def main() -> int:
     prefix = cfg["experiment"]["config_id"]
     epochs = int(args.epochs or train["fixed_epoch"])
     seeds = args.seeds or comma(train["seeds"])
+    loss_kind = str(args.loss_kind or train.get("loss_kind", train.get("loss", "huber"))).lower()
+    if loss_kind not in {"huber", "mse"}:
+        loss_kind = "huber"
 
     cmd = [
         sys.executable,
@@ -90,6 +94,8 @@ def main() -> int:
         model["temp_mode"],
         "--dropout",
         str(model["dropout"]),
+        "--loss-kind",
+        loss_kind,
         "--model-kind",
         "anchor_residual_tcn",
         "--anchor-residual-limit",

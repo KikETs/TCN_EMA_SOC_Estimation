@@ -80,6 +80,7 @@ class TrainDSTSelectorConfig:
     head_kind: str = "linear"
     temp_mode: str = "moe"
     dropout: float = 0.06
+    loss_kind: str = "huber"
     huber_beta: float = 0.02
     rex_group: str = "temperature_drive"
     lambda_rex: float = 2.0
@@ -854,6 +855,15 @@ def _profile_supcon_loss(
     denom = exp_logits.sum(dim=1).clamp_min(1e-12)
     loss = -torch.log((pos_sum / denom).clamp_min(1e-12))
     return loss[valid].mean()
+
+
+def _regression_loss(pred: torch.Tensor, target: torch.Tensor, cfg: TrainDSTSelectorConfig, reduction: str = "mean") -> torch.Tensor:
+    loss_kind = str(cfg.loss_kind).lower()
+    if loss_kind == "mse":
+        return F.mse_loss(pred, target, reduction=reduction)
+    if loss_kind == "huber":
+        return F.smooth_l1_loss(pred, target, beta=float(cfg.huber_beta), reduction=reduction)
+    raise ValueError(f"Unknown loss_kind={cfg.loss_kind!r}")
 
 
 def _burn_global_rng(count: int) -> None:
@@ -1718,11 +1728,11 @@ def _train_select_and_correct(cfg: TrainDSTSelectorConfig, frames, out_dir: Path
             h_last = h[:, -1, :]
             if bool(variant.sequence_training):
                 pred = model.forward_sequence(x)
-                sample_loss = F.smooth_l1_loss(pred, y, beta=float(cfg.huber_beta), reduction="none").mean(dim=(1, 2))
+                sample_loss = _regression_loss(pred, y, cfg, reduction="none").mean(dim=(1, 2))
                 y_for_mmd = y[:, -1, :]
             else:
                 pred = model(x)
-                sample_loss = F.smooth_l1_loss(pred, y, beta=float(cfg.huber_beta), reduction="none").mean(dim=1)
+                sample_loss = _regression_loss(pred, y, cfg, reduction="none").mean(dim=1)
                 y_for_mmd = y
             sw = temp_weights(meta, legacy_variant, int(sample_loss.numel()))
             keys = group_keys(meta, cfg.rex_group)
@@ -1741,9 +1751,9 @@ def _train_select_and_correct(cfg: TrainDSTSelectorConfig, frames, out_dir: Path
             if float(cfg.lambda_anchor_loss) > 0.0 and hasattr(model, "anchor_sequence"):
                 anchor_seq = model.anchor_sequence(x)
                 if bool(variant.sequence_training):
-                    anchor_loss = F.smooth_l1_loss(anchor_seq, y, beta=float(cfg.huber_beta))
+                    anchor_loss = _regression_loss(anchor_seq, y, cfg)
                 else:
-                    anchor_loss = F.smooth_l1_loss(anchor_seq[:, -1, :], y, beta=float(cfg.huber_beta))
+                    anchor_loss = _regression_loss(anchor_seq[:, -1, :], y, cfg)
                 loss = loss + float(cfg.lambda_anchor_loss) * anchor_loss
             if float(cfg.lambda_profile_supcon) > 0.0:
                 supcon_loss = _profile_supcon_loss(
@@ -1768,7 +1778,7 @@ def _train_select_and_correct(cfg: TrainDSTSelectorConfig, frames, out_dir: Path
                     dropout_prob=float(cfg.current_dropout_prob),
                 )
                 pred_aug = model.forward_sequence(x_aug) if bool(variant.sequence_training) else model(x_aug)
-                consistency = F.smooth_l1_loss(pred_aug, pred.detach(), beta=float(cfg.huber_beta))
+                consistency = _regression_loss(pred_aug, pred.detach(), cfg)
                 loss = loss + float(cfg.lambda_current_consistency) * consistency
                 consistency_losses.append(float(consistency.detach().cpu()))
             opt.zero_grad(set_to_none=True)
@@ -1885,11 +1895,11 @@ def _train_select_and_correct(cfg: TrainDSTSelectorConfig, frames, out_dir: Path
                 h_last = h[:, -1, :]
                 if bool(variant.sequence_training):
                     pred = model.forward_sequence(x)
-                    sample_loss = F.smooth_l1_loss(pred, y, beta=float(cfg.huber_beta), reduction="none").mean(dim=(1, 2))
+                    sample_loss = _regression_loss(pred, y, cfg, reduction="none").mean(dim=(1, 2))
                     y_for_mmd = y[:, -1, :]
                 else:
                     pred = model(x)
-                    sample_loss = F.smooth_l1_loss(pred, y, beta=float(cfg.huber_beta), reduction="none").mean(dim=1)
+                    sample_loss = _regression_loss(pred, y, cfg, reduction="none").mean(dim=1)
                     y_for_mmd = y
                 sw = temp_weights(meta, legacy_variant, int(sample_loss.numel()))
                 keys = group_keys(meta, cfg.rex_group)
@@ -1908,9 +1918,9 @@ def _train_select_and_correct(cfg: TrainDSTSelectorConfig, frames, out_dir: Path
                 if float(cfg.lambda_anchor_loss) > 0.0 and hasattr(model, "anchor_sequence"):
                     anchor_seq = model.anchor_sequence(x)
                     if bool(variant.sequence_training):
-                        anchor_loss = F.smooth_l1_loss(anchor_seq, y, beta=float(cfg.huber_beta))
+                        anchor_loss = _regression_loss(anchor_seq, y, cfg)
                     else:
-                        anchor_loss = F.smooth_l1_loss(anchor_seq[:, -1, :], y, beta=float(cfg.huber_beta))
+                        anchor_loss = _regression_loss(anchor_seq[:, -1, :], y, cfg)
                     loss = loss + float(cfg.lambda_anchor_loss) * anchor_loss
                 if float(cfg.lambda_profile_supcon) > 0.0:
                     supcon_loss = _profile_supcon_loss(
@@ -1935,7 +1945,7 @@ def _train_select_and_correct(cfg: TrainDSTSelectorConfig, frames, out_dir: Path
                         dropout_prob=float(cfg.current_dropout_prob),
                     )
                     pred_aug = model.forward_sequence(x_aug) if bool(variant.sequence_training) else model(x_aug)
-                    consistency = F.smooth_l1_loss(pred_aug, pred.detach(), beta=float(cfg.huber_beta))
+                    consistency = _regression_loss(pred_aug, pred.detach(), cfg)
                     loss = loss + float(cfg.lambda_current_consistency) * consistency
                     consistency_losses.append(float(consistency.detach().cpu()))
                 opt.zero_grad(set_to_none=True)
@@ -2579,6 +2589,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--head-kind", choices=["linear", "mlp"], default="linear")
     p.add_argument("--temp-mode", choices=["none", "bias", "moe", "hard_heads"], default="moe")
     p.add_argument("--dropout", type=float, default=0.06)
+    p.add_argument("--loss-kind", choices=["huber", "mse"], default="huber")
     p.add_argument(
         "--model-kind",
         choices=[
@@ -2802,6 +2813,7 @@ def main() -> None:
         head_kind=str(args.head_kind),
         temp_mode=str(args.temp_mode),
         dropout=float(args.dropout),
+        loss_kind=str(args.loss_kind),
         model_kind=str(args.model_kind),
         fusion_h64_weight=float(args.fusion_h64_weight),
         corr_mode=str(args.corr_mode),
