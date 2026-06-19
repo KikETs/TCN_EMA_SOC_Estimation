@@ -14,6 +14,7 @@ from PIL import Image
 
 
 PROFILE_ORDER = ("BJDST", "DST", "US06", "FUDS")
+PROFILE_PANEL_LABELS = ("(a)", "(b)", "(c)", "(d)")
 TEMP_ORDER = (0.0, 25.0, 45.0)
 TEMP_COLORS = {
     0.0: "#1f77b4",
@@ -155,10 +156,10 @@ def make_figure(data_root: Path, out_path: Path, current_temp: float) -> None:
         {
             "font.family": "Times New Roman",
             "axes.linewidth": 0.8,
-            "axes.labelsize": 9.5,
-            "xtick.labelsize": 8.5,
-            "ytick.labelsize": 8.5,
-            "legend.fontsize": 8.5,
+            "axes.labelsize": 12.0,
+            "xtick.labelsize": 10.5,
+            "ytick.labelsize": 10.5,
+            "legend.fontsize": 11.0,
         }
     )
 
@@ -178,14 +179,15 @@ def make_figure(data_root: Path, out_path: Path, current_temp: float) -> None:
         current_frame = one_current_cycle(frames[representative_key])
         axes[0, col].plot(current_frame["cycle_time_s"], current_frame["current_A"], color="black", lw=0.8)
         axes[0, col].text(
-            0.03,
-            0.95,
-            profile,
+            0.0,
+            1.12,
+            PROFILE_PANEL_LABELS[col],
             transform=axes[0, col].transAxes,
             ha="left",
-            va="top",
-            fontsize=10,
-            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.5},
+            va="bottom",
+            fontsize=16.0,
+            fontweight="bold",
+            clip_on=False,
         )
 
         for temp in TEMP_ORDER:
@@ -215,13 +217,12 @@ def make_figure(data_root: Path, out_path: Path, current_temp: float) -> None:
             ax.spines["right"].set_visible(False)
             if col == 0:
                 ax.set_ylabel(row_labels[row])
-            if row == 2:
-                ax.set_xlabel("Trajectory time (s)")
         axes[2, col].set_ylim(-2, 90)
 
     handles, labels = axes[1, -1].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.52, 0.985))
-    fig.subplots_adjust(left=0.065, right=0.99, bottom=0.08, top=0.90, wspace=0.23, hspace=0.24)
+    fig.supxlabel("Trajectory time (s)", y=0.075, fontsize=12.0)
+    fig.legend(handles, labels, loc="lower center", ncol=3, frameon=False, bbox_to_anchor=(0.52, 0.012))
+    fig.subplots_adjust(left=0.065, right=0.99, bottom=0.17, top=0.88, wspace=0.23, hspace=0.24)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     svg_path = out_path.with_suffix(".svg")
     fig.savefig(svg_path, format="svg")
