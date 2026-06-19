@@ -490,26 +490,29 @@ def make_raw_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir: Pat
             "font.family": "Times New Roman",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
-            "font.size": 12,
-            "axes.labelsize": 12,
-            "legend.fontsize": 11,
-            "xtick.labelsize": 11,
-            "ytick.labelsize": 11,
+            "font.size": 13,
+            "axes.labelsize": 14,
+            "legend.fontsize": 12,
+            "xtick.labelsize": 12,
+            "ytick.labelsize": 12,
         }
     )
     colors = {"Current": "#1f77b4", "Voltage": "#d62728", "Reference SOC": "#2ca02c"}
     order = ["Current", "Voltage", "Reference SOC"]
-    fig, axes = plt.subplots(1, 3, figsize=(12.6, 4.2), constrained_layout=True)
+    fig, axes = plt.subplots(1, 3, figsize=(12.6, 4.6))
     ax = axes[0]
+    signal_handles = []
+    signal_labels = []
     for signal in order:
         g = curves[curves["signal_name"] == signal].groupby("frequency_cycles_per_sample", as_index=False)["normalized_psd"].mean()
-        ax.plot(g["frequency_cycles_per_sample"], g["normalized_psd"], label=signal, color=colors[signal], lw=1.4)
+        (line,) = ax.plot(g["frequency_cycles_per_sample"], g["normalized_psd"], label=signal, color=colors[signal], lw=1.4)
+        signal_handles.append(line)
+        signal_labels.append(signal)
     for boundary in (LOW_BOUND, HIGH_BOUND):
         ax.axvline(boundary, color="0.25", ls="--", lw=0.8)
     ax.set_xscale("log")
     ax.set_xlabel("Frequency (cycles/sample)")
     ax.set_ylabel("Normalized PSD")
-    ax.legend(frameon=False)
 
     ax = axes[1]
     x = np.arange(len(order))
@@ -525,7 +528,6 @@ def make_raw_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir: Pat
         bottom += np.asarray(vals)
     ax.set_xticks(x, order, rotation=0)
     ax.set_ylabel("Energy fraction (%)")
-    ax.legend(frameon=False, ncol=3, loc="upper center", bbox_to_anchor=(0.5, 1.18))
 
     ax = axes[2]
     for signal in order:
@@ -537,6 +539,30 @@ def make_raw_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir: Pat
     ax.set_xlabel("Frequency (cycles/sample)")
     ax.set_ylabel("Cumulative energy")
     ax.set_ylim(0, 1.02)
+    for panel_label, ax in zip(("(a)", "(b)", "(c)"), axes):
+        ax.text(
+            0.0,
+            1.06,
+            panel_label,
+            transform=ax.transAxes,
+            ha="left",
+            va="bottom",
+            fontsize=18,
+            fontweight="bold",
+            clip_on=False,
+        )
+    band_handles, band_labels = axes[1].get_legend_handles_labels()
+    fig.legend(
+        signal_handles + band_handles,
+        signal_labels + band_labels,
+        frameon=False,
+        ncol=6,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.02),
+        columnspacing=1.3,
+        handlelength=1.7,
+    )
+    fig.subplots_adjust(left=0.065, right=0.985, bottom=0.25, top=0.84, wspace=0.32)
     fig.savefig(figures_dir / "Figure_3_raw_signal_frequency_structure.png", dpi=600)
     fig.savefig(figures_dir / "Figure_3_raw_signal_frequency_structure.pdf")
     plt.close(fig)
