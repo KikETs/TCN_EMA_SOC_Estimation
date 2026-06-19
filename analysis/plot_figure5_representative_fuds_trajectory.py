@@ -329,17 +329,6 @@ def plot_temperature_representatives(
         ax_soc.plot(plot_frame["_x"], y_pred_pct, color="#2F6FAE", linewidth=0.95, label="G4 prediction")
         ax_err.plot(plot_frame["_x"], abs_error_pct, color="#8F3B32", linewidth=0.8)
         ax_soc.text(
-            0.02,
-            0.97,
-            f"({chr(ord('a') + int(col))})",
-            transform=ax_soc.transAxes,
-            ha="left",
-            va="top",
-            fontsize=10,
-            fontweight="bold",
-            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.85, "pad": 1.4},
-        )
-        ax_soc.text(
             0.98,
             0.95,
             f"{format_temp(float(selected['temperature']))}\n"
@@ -360,7 +349,7 @@ def plot_temperature_representatives(
             ax.spines["right"].set_visible(False)
 
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, frameon=False, loc="upper center", ncol=2, bbox_to_anchor=(0.52, 0.995))
+    fig.legend(handles, labels, frameon=False, loc="lower center", ncol=2, bbox_to_anchor=(0.52, 0.055))
     if bottom_max > 0:
         err_ylim = np.ceil(bottom_max * 10.0) / 10.0
         for ax in axes[1, :]:
@@ -373,7 +362,18 @@ def plot_temperature_representatives(
         va="bottom",
         fontsize=8.5,
     )
-    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.13, top=0.90)
+    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.20, top=0.86)
+    for col in range(ncols):
+        pos = axes[0, col].get_position()
+        fig.text(
+            pos.x0,
+            0.945,
+            f"({chr(ord('a') + col)})",
+            ha="left",
+            va="top",
+            fontsize=10,
+            fontweight="bold",
+        )
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=600)
     fig.savefig(out_pdf)
