@@ -60,7 +60,16 @@ def plot_main_heatmap(details: pd.DataFrame, out_png: Path, out_pdf: Path, min_c
             vmin=0.0,
             vmax=10.0,
         )
-        ax.set_title(f"{int(temp)}°C", pad=6)
+        ax.text(
+            0.03,
+            0.94,
+            f"{int(temp)} °C",
+            transform=ax.transAxes,
+            ha="left",
+            va="top",
+            fontsize=11,
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.5},
+        )
         ax.set_xlabel("Voltage bin")
         ax.grid(False)
         for spine in ax.spines.values():

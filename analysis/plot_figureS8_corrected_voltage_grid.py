@@ -149,7 +149,6 @@ def plot_grid(frames: list[pd.DataFrame], out_png: Path, out_pdf: Path) -> tuple
             key = (temp, profile)
             if key not in by_key:
                 ax.text(0.5, 0.5, "Not available", ha="center", va="center", transform=ax.transAxes, color="0.45")
-                ax.set_title(f"{profile}, {format_temp(temp)}")
                 ax.set_ylim(*y_limits)
             else:
                 frame = decimate(by_key[key])
@@ -157,9 +156,18 @@ def plot_grid(frames: list[pd.DataFrame], out_png: Path, out_pdf: Path) -> tuple
                 line_corr = ax.plot(frame["_x"], frame["V_corr_raw"], color=corr_color, linewidth=0.85, label="Corrected voltage")[0]
                 if legend_handles is None:
                     legend_handles = [line_raw, line_corr]
-                ax.set_title(f"{profile}, {format_temp(temp)}")
                 ax.set_ylim(*y_limits)
                 ax.margins(x=0.01)
+            ax.text(
+                0.03,
+                0.94,
+                f"{profile}, {format_temp(temp)}",
+                transform=ax.transAxes,
+                ha="left",
+                va="top",
+                fontsize=8.5,
+                bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.5},
+            )
 
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)

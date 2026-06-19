@@ -693,14 +693,22 @@ def plot_operating_space(all_data: pd.DataFrame, figures: Path, profiles: tuple[
             d = all_data[all_data["temperature_C"].eq(float(temp)) & all_data["profile"].eq(profile)]
             if not d.empty:
                 hb = ax.hexbin(d["voltage_V"], d["current_A"], gridsize=45, mincnt=1, cmap="viridis")
-            ax.set_title(f"{int(temp)}C {profile}")
+            ax.text(
+                0.03,
+                0.96,
+                f"{int(temp)}C {profile}",
+                transform=ax.transAxes,
+                ha="left",
+                va="top",
+                fontsize=8.5,
+                bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.4},
+            )
             ax.set_xlim(vlim)
             ax.set_ylim(ilim)
             if r == len(temperatures) - 1:
                 ax.set_xlabel("Voltage (V)")
             if c == 0:
                 ax.set_ylabel("Current (A)")
-    fig.suptitle("Voltage-current operating space density", y=1.01)
     save_fig(fig, figures, "fig_s2_operating_space_vi_grid_density")
     (figures / "fig_s2_operating_space_vi_grid.png").write_bytes((figures / "fig_s2_operating_space_vi_grid_density.png").read_bytes())
     (figures / "fig_s2_operating_space_vi_grid.pdf").write_bytes((figures / "fig_s2_operating_space_vi_grid_density.pdf").read_bytes())
@@ -715,7 +723,16 @@ def plot_operating_space(all_data: pd.DataFrame, figures: Path, profiles: tuple[
                 d = d.iloc[rng.choice(len(d), size=6000, replace=False)]
             if not d.empty:
                 sc = ax.scatter(d["voltage_V"], d["current_A"], c=d["SOC"], s=2.5, cmap="plasma", alpha=0.75, vmin=0.0, vmax=1.0)
-            ax.set_title(f"{int(temp)}C {profile}")
+            ax.text(
+                0.03,
+                0.96,
+                f"{int(temp)}C {profile}",
+                transform=ax.transAxes,
+                ha="left",
+                va="top",
+                fontsize=8.5,
+                bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.4},
+            )
             ax.set_xlim(vlim)
             ax.set_ylim(ilim)
             if r == len(temperatures) - 1:
@@ -723,7 +740,6 @@ def plot_operating_space(all_data: pd.DataFrame, figures: Path, profiles: tuple[
             if c == 0:
                 ax.set_ylabel("Current (A)")
     fig.colorbar(sc, ax=axes.ravel().tolist(), label="SOC fraction", shrink=0.82)
-    fig.suptitle("Voltage-current operating space colored by SOC", y=1.01)
     save_fig(fig, figures, "fig_s2_operating_space_vi_grid_soccolor")
 
 
@@ -735,13 +751,11 @@ def plot_acf(lag_table: pd.DataFrame, figures: Path) -> None:
         i = [group[f"rho_I_lag{lag}"].mean() for lag in lags]
         axes[0].plot(lags, v, marker="o", label=profile)
         axes[1].plot(lags, i, marker="o", label=profile)
-    axes[0].set_title("Voltage autocorrelation")
-    axes[1].set_title("Current autocorrelation")
-    for ax in axes:
+    for ax, ylabel in zip(axes, ("Voltage correlation", "Current correlation")):
         ax.set_xlabel("Lag (samples)")
-        ax.set_ylabel("Correlation")
+        ax.set_ylabel(ylabel)
         ax.set_ylim(-0.2, 1.05)
-    axes[1].legend(title="Profile", fontsize=8)
+    axes[1].legend(fontsize=8)
     save_fig(fig, figures, "fig_s2_time_lag_acf_voltage_current")
 
     fig, ax = plt.subplots(figsize=(6.5, 4.0))
@@ -751,7 +765,6 @@ def plot_acf(lag_table: pd.DataFrame, figures: Path) -> None:
     ax.plot(lags, i_mean, marker="o", label="Current")
     ax.set_xlabel("Lag (samples)")
     ax.set_ylabel("Mean autocorrelation")
-    ax.set_title("Temperature/profile-averaged autocorrelation")
     ax.legend()
     save_fig(fig, figures, "fig_s2_time_lag_acf_summary")
 
@@ -768,12 +781,20 @@ def plot_soc_iqr_heatmap(details: pd.DataFrame, figures: Path) -> None:
             continue
         pivot = d.pivot_table(index="current_bin", columns="voltage_bin", values="SOC_IQR_fraction", aggfunc="mean")
         last = ax.imshow(pivot.sort_index(ascending=True).to_numpy(), origin="lower", aspect="auto", cmap="magma", vmin=0.0, vmax=max(0.2, float(d["SOC_IQR_fraction"].quantile(0.95))))
-        ax.set_title(f"{int(temp)}C")
+        ax.text(
+            0.03,
+            0.96,
+            f"{int(temp)}C",
+            transform=ax.transAxes,
+            ha="left",
+            va="top",
+            fontsize=9.0,
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.4},
+        )
         ax.set_xlabel("Voltage bin")
         ax.set_ylabel("Current bin")
     if last is not None:
         fig.colorbar(last, ax=axes, label="SOC IQR (fraction)", shrink=0.85)
-    fig.suptitle("Within-bin SOC IQR in local voltage-current bins", y=1.02)
     save_fig(fig, figures, "fig_s2_raw_vi_soc_iqr_heatmap_by_temp")
 
 
@@ -783,8 +804,7 @@ def plot_history_conditioned(summary: pd.DataFrame, figures: Path) -> None:
     pivot.plot(kind="bar", ax=ax, width=0.82)
     ax.set_ylabel("Median SOC IQR (fraction)")
     ax.set_xlabel("")
-    ax.set_title("History-conditioned SOC spread")
-    ax.legend(title="Temperature (C)", fontsize=8)
+    ax.legend(fontsize=8)
     save_fig(fig, figures, "fig_s2_history_conditioned_soc_spread_reduction")
 
 
@@ -800,7 +820,6 @@ def plot_profile_overlap(overlap: pd.DataFrame, figures: Path, main_test_profile
     ax.set_xticklabels(pivot.columns)
     ax.set_yticks(range(len(pivot.index)))
     ax.set_yticklabels([f"{int(t)}C" for t in pivot.index])
-    ax.set_title("V-I distribution overlap by holdout profile")
     ax.set_xlabel("Holdout profile")
     ax.set_ylabel("Temperature")
     fig.colorbar(img, ax=ax, label="Overlap coefficient")

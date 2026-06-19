@@ -177,7 +177,16 @@ def make_figure(data_root: Path, out_path: Path, current_temp: float) -> None:
             representative_key = (TEMP_ORDER[0], profile)
         current_frame = one_current_cycle(frames[representative_key])
         axes[0, col].plot(current_frame["cycle_time_s"], current_frame["current_A"], color="black", lw=0.8)
-        axes[0, col].set_title(profile, fontsize=11.5, pad=5)
+        axes[0, col].text(
+            0.03,
+            0.95,
+            profile,
+            transform=axes[0, col].transAxes,
+            ha="left",
+            va="top",
+            fontsize=10,
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.5},
+        )
 
         for temp in TEMP_ORDER:
             frame = frames[(temp, profile)]
