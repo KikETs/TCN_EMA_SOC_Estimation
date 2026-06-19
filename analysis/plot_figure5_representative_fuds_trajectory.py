@@ -329,6 +329,17 @@ def plot_temperature_representatives(
         ax_soc.plot(plot_frame["_x"], y_pred_pct, color="#2F6FAE", linewidth=0.95, label="G4 prediction")
         ax_err.plot(plot_frame["_x"], abs_error_pct, color="#8F3B32", linewidth=0.8)
         ax_soc.text(
+            0.02,
+            0.97,
+            f"({chr(ord('a') + int(col))})",
+            transform=ax_soc.transAxes,
+            ha="left",
+            va="top",
+            fontsize=10,
+            fontweight="bold",
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.85, "pad": 1.4},
+        )
+        ax_soc.text(
             0.98,
             0.95,
             f"{format_temp(float(selected['temperature']))}\n"
