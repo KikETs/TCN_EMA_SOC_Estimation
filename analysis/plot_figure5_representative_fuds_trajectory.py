@@ -261,7 +261,7 @@ def plot_representative(frame: pd.DataFrame, selected: pd.Series, target_mae_pct
         fontsize=9,
         bbox={"facecolor": "white", "edgecolor": "0.75", "linewidth": 0.4, "pad": 3.5},
     )
-    axes[0].legend(frameon=False, loc="lower left", ncol=2)
+    axes[0].legend(frameon=False, loc="center left", bbox_to_anchor=(1.02, 0.5), ncol=1)
     axes[0].set_ylabel("SOC (%SOC)")
     axes[1].set_ylabel("Abs. error\n(%SOC)")
     axes[1].set_xlabel(xlabel)
@@ -277,7 +277,7 @@ def plot_representative(frame: pd.DataFrame, selected: pd.Series, target_mae_pct
         va="bottom",
         fontsize=8.5,
     )
-    fig.subplots_adjust(left=0.105, right=0.985, bottom=0.12, top=0.98)
+    fig.subplots_adjust(left=0.105, right=0.80, bottom=0.12, top=0.98)
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=600)
     fig.savefig(out_pdf)
@@ -349,7 +349,7 @@ def plot_temperature_representatives(
             ax.spines["right"].set_visible(False)
 
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, frameon=False, loc="upper center", ncol=2, bbox_to_anchor=(0.52, 0.995))
+    fig.legend(handles, labels, frameon=False, loc="upper left", ncol=1, bbox_to_anchor=(0.86, 0.91))
     if bottom_max > 0:
         err_ylim = np.ceil(bottom_max * 10.0) / 10.0
         for ax in axes[1, :]:
@@ -362,7 +362,7 @@ def plot_temperature_representatives(
         va="bottom",
         fontsize=8.5,
     )
-    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.13, top=0.90)
+    fig.subplots_adjust(left=0.08, right=0.84, bottom=0.13, top=0.94)
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=600)
     fig.savefig(out_pdf)
