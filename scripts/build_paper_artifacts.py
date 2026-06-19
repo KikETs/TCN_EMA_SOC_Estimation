@@ -141,6 +141,8 @@ def build_tables(source: Path, table_dir: Path) -> dict[str, pd.DataFrame]:
     )
     agg = summary[summary["metric_name"].eq("g4_seed_aggregate_tempmean_mae_pct")]
     if not agg.empty:
+        tempmean_rmse = float(t1_temp["RMSE_pct_mean"].mean())
+        tempmean_maxae = float(t1_temp["MaxAE_pct_mean"].mean())
         t1_temp = pd.concat(
             [
                 t1_temp,
@@ -151,8 +153,8 @@ def build_tables(source: Path, table_dir: Path) -> dict[str, pd.DataFrame]:
                             "seed_count": int(agg["done_seed_count"].iloc[0]),
                             "MAE_pct_mean": float(agg["mean_tempmean_mae_pct"].iloc[0]),
                             "MAE_pct_std": float(agg["std_tempmean_mae_pct"].iloc[0]),
-                            "RMSE_pct_mean": np.nan,
-                            "MaxAE_pct_mean": np.nan,
+                            "RMSE_pct_mean": tempmean_rmse,
+                            "MaxAE_pct_mean": tempmean_maxae,
                         }
                     ]
                 ),
