@@ -87,6 +87,24 @@ def y_positions(df: pd.DataFrame) -> tuple[np.ndarray, list[tuple[str, float]]]:
     return np.array(positions), region_centers
 
 
+def display_group_label(group: str) -> str:
+    if group == "Non-ambiguous bins":
+        return "Non-ambiguous\nbins"
+    if group == "Ambiguous bins":
+        return "Ambiguous\nbins"
+    return group
+
+
+def display_region_label(region: str) -> str:
+    if region == "Recent absolute-current history":
+        return "Recent absolute-\ncurrent history"
+    if region == "Voltage-response deviation":
+        return "Voltage-response\ndeviation"
+    if region == "Local V-I ambiguity":
+        return "Local V-I\nambiguity"
+    return region
+
+
 def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
     set_manuscript_style()
     y, region_centers = y_positions(df)
@@ -105,10 +123,40 @@ def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
         ax.text(annotation_x, yi, f"\u0394MAE={value:+.3f}", va="center", ha="left", fontsize=8.5)
 
     for region, center in region_centers:
-        ax.text(-0.18, center, region, transform=ax.get_yaxis_transform(), ha="right", va="center", fontsize=9)
+        if region == "SOC band":
+            x_offset = -0.22
+        elif region == "Local V-I ambiguity":
+            x_offset = -0.18
+        else:
+            x_offset = -0.18
+        ax.text(
+            x_offset,
+            center,
+            display_region_label(region),
+            transform=ax.get_yaxis_transform(),
+            ha="right",
+            va="center",
+            fontsize=9,
+            linespacing=1.05,
+        )
 
     ax.set_yticks(y)
-    ax.set_yticklabels(df["group"])
+    ytick_labels = [
+        "" if str(region) == "Local V-I ambiguity" else display_group_label(str(group))
+        for region, group in zip(df["region_definition"], df["group"])
+    ]
+    ax.set_yticklabels(ytick_labels)
+    for yi, region, group in zip(y, df["region_definition"], df["group"]):
+        if str(region) == "Local V-I ambiguity":
+            ax.text(
+                -0.015,
+                yi,
+                display_group_label(str(group)),
+                transform=ax.get_yaxis_transform(),
+                ha="right",
+                va="center",
+                fontsize=9,
+            )
     ax.invert_yaxis()
     ax.set_xlabel("MAE (%SOC)")
     ax.set_xlim(0.0, annotation_x + 0.28)
@@ -117,7 +165,7 @@ def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
     ax.spines["right"].set_visible(False)
     handles, labels = ax.get_legend_handles_labels()
     fig.legend(handles, labels, frameon=False, loc="upper center", ncol=2, bbox_to_anchor=(0.64, 0.995))
-    fig.subplots_adjust(left=0.36, right=0.97, bottom=0.12, top=0.91)
+    fig.subplots_adjust(left=0.39, right=0.97, bottom=0.12, top=0.91)
 
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=600)
