@@ -28,9 +28,9 @@ ORDER = [
 ]
 
 REGION_LABEL_X = {
-    "SOC band": -0.22,
-    "Recent absolute-current history": -0.235,
-    "Voltage-response deviation": -0.235,
+    "SOC band": -0.205,
+    "Recent absolute-current history": -0.205,
+    "Voltage-response deviation": -0.205,
     "Local V-I ambiguity": -0.205,
 }
 ROW_LABEL_X = -0.015
