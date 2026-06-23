@@ -42,8 +42,9 @@ The leading date/cell prefix may differ, for example:
 ```
 
 The important part is that each dynamic file name contains temperature,
-profile, and an `80` or `80SOC` start-SOC token. Other start-SOC tokens are
-rejected by the preprocessing script.
+profile, and an `80` or `80SOC` manuscript-dataset token. This token is used
+only to validate that the correct dynamic-profile files are being converted; it
+is not used as the SOC label.
 
 Reference files belong in `Data/raw_reference/`:
 
@@ -54,9 +55,10 @@ Data/raw_reference/
   *low current OCV*.xlsx
 ```
 
-The initial-capacity file is used to infer capacity when `--capacity-ah` is not
-provided. Low-current OCV files are reference/provenance files and are not a
-substitute for the dynamic profile files above.
+Low-current OCV files are required for the manuscript SOC-label calculation
+unless the compact SOC0/Qref provenance tables are present in
+`Data/source_tables/`. They are not a substitute for the dynamic profile files
+above.
 
 Run:
 
@@ -73,15 +75,23 @@ python Data/prepare_calce_nmc.py --allow-incomplete
 
 The script writes profile-temperature CSV files to `Data/processed/`.
 
-SOC label rule used by default:
-- initial SOC is inferred from the `80` or `80SOC` filename token when available
-- otherwise initial SOC defaults to 80 % only for files without any SOC token
-- capacity is inferred from `Data/raw_reference/*Initial*capacity*.xls*` when possible
-- otherwise capacity defaults to 2.0 Ah
-- SOC uses net removed capacity, `Discharge_Capacity(Ah) - Charge_Capacity(Ah)`,
-  when both capacity columns are available
-- otherwise SOC is estimated from net current integration
-- SOC is clipped to `[0, 100]`
+SOC label rule:
+- the dynamic driving step is extracted from the raw profile file
+- `SOC0_Vinit(V)` is taken from the final voltage of the preceding rest step
+- `SOC0_OCV_inferred` is obtained from the same-temperature low-current OCV curve
+- `Q_ref_lc_ocv_Ah` is the same-temperature low-current OCV discharge capacity
+- `Qnet_removed(Ah)` is computed within the driving step as
+  `Qdis_seg(Ah) - Qchg_seg(Ah)`
+- `SOC_CC_unclipped = SOC0_OCV_inferred - Qnet_removed(Ah) / Q_ref_lc_ocv_Ah`
+- `SOC_CC = clip(SOC_CC_unclipped, 0, 1)`
+
+The compact source tables below are included to reproduce the manuscript SOC
+anchors exactly:
+
+```text
+Data/source_tables/ocv_inferred_start_soc_by_file.csv
+Data/source_tables/lc_ocv_capacity_reference.csv
+```
 
 Feature construction:
 - `V_corr_raw = causal_time_ema(V_raw - I_raw * R0(T), tau=120 s)`

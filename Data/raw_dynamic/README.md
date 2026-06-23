@@ -16,7 +16,12 @@ Expected temperature tokens:
 - 45C
 
 Expected start-SOC token:
-- 80 or 80SOC for the manuscript dynamic-profile set
+- 80 or 80SOC for the manuscript dynamic-profile file names
+
+This token is a dataset/file-selection check only. The SOC label is not started
+from a fixed 80 %. `Data/prepare_calce_nmc.py` infers the file-level starting
+SOC from the preceding rest voltage and the same-temperature low-current OCV
+curve.
 
 Required manuscript dynamic-profile file patterns:
 

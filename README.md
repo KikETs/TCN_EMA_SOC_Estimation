@@ -84,9 +84,8 @@ python Data/prepare_calce_nmc.py
 ```
 
 The output CSV files are written to `Data/processed/`.
-The default conversion checks that the complete 12-file 80 % SOC manuscript
-dynamic-profile set is present. For a partial conversion check, pass
-`--allow-incomplete`.
+The default conversion checks that the complete 12-file manuscript dynamic
+profile set is present. For a partial conversion check, pass `--allow-incomplete`.
 
 For the manuscript dataset, `Data/raw_dynamic/` must contain the 12 driving
 profile files matching:
@@ -100,8 +99,24 @@ profile files matching:
 
 The filename may include a leading date/cell prefix, for example
 `02_24_2016_SP20-2_0C_DST_80SOC.xls` or
-`02_24_2016_SP20-2_0C_DST_80.xls`. Low-current OCV files are reference files
-and belong in `Data/raw_reference/`, not `Data/raw_dynamic/`.
+`02_24_2016_SP20-2_0C_DST_80.xls`. The `80`/`80SOC` token is used to validate
+that the manuscript dynamic-profile files were supplied; it is not used as the
+SOC label.
+
+Low-current OCV files are reference files and belong in `Data/raw_reference/`,
+not `Data/raw_dynamic/`. The SOC label follows the manuscript rule:
+
+```text
+SOC_CC_unclipped(t) = SOC0_OCV_inferred(file) - Qnet_removed(t) / Q_ref_lc_ocv(T)
+SOC_CC(t) = clip(SOC_CC_unclipped(t), 0, 1)
+```
+
+Here `SOC0_OCV_inferred(file)` is inferred from the final rest voltage before
+the driving step and the same-temperature LC-OCV curve. `Q_ref_lc_ocv(T)` is the
+same-temperature LC-OCV discharge capacity. The included compact provenance
+tables in `Data/source_tables/ocv_inferred_start_soc_by_file.csv` and
+`Data/source_tables/lc_ocv_capacity_reference.csv` reproduce the manuscript SOC
+anchors exactly.
 
 Raw CALCE files and generated driving-profile CSV files are intentionally excluded from Git. The expected CALCE source archives and reference-file checksums are listed in:
 
