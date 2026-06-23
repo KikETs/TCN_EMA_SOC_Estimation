@@ -5,7 +5,7 @@ import json
 import math
 import re
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
@@ -114,6 +114,18 @@ def is_forbidden_path(path: Path) -> bool:
     return any(token in name for token in FORBIDDEN_FILE_TOKENS)
 
 
+def public_path_label(path: Path, base_dir: Path | None = None) -> str:
+    resolved = path.resolve()
+    if base_dir is not None:
+        try:
+            return resolved.relative_to(base_dir.resolve()).as_posix()
+        except ValueError:
+            pass
+    if resolved.name == "data":
+        return "external_raw_data/data"
+    return f"external_raw_data/{resolved.name}"
+
+
 def candidate_data_roots(base_dir: Path, data_root: str | None) -> list[Path]:
     if data_root and data_root.lower() != "auto":
         return [Path(data_root).expanduser().resolve()]
@@ -135,7 +147,7 @@ def candidate_data_roots(base_dir: Path, data_root: str | None) -> list[Path]:
     return out
 
 
-def discover_terminal_files(root: Path) -> tuple[list[FileMapping], dict[str, object]]:
+def discover_terminal_files(root: Path, base_dir: Path | None = None) -> tuple[list[FileMapping], dict[str, object]]:
     mappings: list[FileMapping] = []
     scanned = skipped_forbidden = skipped_missing = skipped_profile_temp = 0
     inspected_files: list[str] = []
@@ -206,7 +218,7 @@ def discover_terminal_files(root: Path) -> tuple[list[FileMapping], dict[str, ob
         by_record.setdefault(key, mapping)
     records = sorted(by_record.values(), key=lambda m: (m.temperature_C, PROFILE_ORDER.index(m.profile)))
     diagnostics = {
-        "searched_directory": root.as_posix(),
+        "searched_directory": public_path_label(root, base_dir),
         "n_csv_scanned": scanned,
         "n_terminal_files_found": len(records),
         "n_skipped_forbidden_name": skipped_forbidden,
@@ -221,7 +233,7 @@ def discover_terminal_files(root: Path) -> tuple[list[FileMapping], dict[str, ob
 def choose_data_root(base_dir: Path, data_root: str | None) -> tuple[Path, list[FileMapping], dict[str, object], list[dict[str, object]]]:
     attempts: list[dict[str, object]] = []
     for root in candidate_data_roots(base_dir, data_root):
-        records, diag = discover_terminal_files(root)
+        records, diag = discover_terminal_files(root, base_dir)
         attempts.append(diag)
         keys = {(r.temperature_C, r.profile) for r in records}
         expected = {(t, p) for t in TEMP_ORDER for p in PROFILE_ORDER}
@@ -488,8 +500,11 @@ def make_raw_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir: Pat
     plt.rcParams.update(
         {
             "font.family": "Times New Roman",
+            "font.weight": "bold",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
+            "axes.labelweight": "bold",
+            "axes.titleweight": "bold",
             "font.size": 13,
             "axes.labelsize": 14,
             "legend.fontsize": 12,
@@ -539,6 +554,9 @@ def make_raw_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir: Pat
     ax.set_xlabel("Frequency (cycles/sample)")
     ax.set_ylabel("Cumulative energy")
     ax.set_ylim(0, 1.02)
+    for ax in axes:
+        for label in ax.get_xticklabels() + ax.get_yticklabels():
+            label.set_fontweight("bold")
     for panel_label, ax in zip(("(a)", "(b)", "(c)"), axes):
         ax.text(
             0.0,
@@ -561,6 +579,7 @@ def make_raw_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir: Pat
         bbox_to_anchor=(0.5, 0.02),
         columnspacing=1.3,
         handlelength=1.7,
+        prop={"family": "Times New Roman", "weight": "bold", "size": 12},
     )
     fig.subplots_adjust(left=0.065, right=0.985, bottom=0.25, top=0.84, wspace=0.32)
     fig.savefig(figures_dir / "Figure_3_raw_signal_frequency_structure.png", dpi=600)
@@ -590,7 +609,9 @@ def make_raw_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir: Pat
     ax.set_xlabel("Frequency (cycles/sample)")
     ax.set_ylabel("Cumulative spectral energy")
     ax.set_ylim(0, 1.02)
-    ax.legend(frameon=False)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontweight("bold")
+    ax.legend(frameon=False, prop={"family": "Times New Roman", "weight": "bold", "size": 12})
     for boundary in (LOW_BOUND, HIGH_BOUND):
         ax.axvline(boundary, color="0.25", ls="--", lw=0.8)
     fig.savefig(figures_dir / "Figure_S6_raw_signal_cumulative_energy.png", dpi=600)
@@ -1003,16 +1024,19 @@ def make_feature_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir:
     plt.rcParams.update(
         {
             "font.family": "Times New Roman",
+            "font.weight": "bold",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
-            "font.size": 12,
-            "axes.labelsize": 12,
-            "legend.fontsize": 11,
-            "xtick.labelsize": 11,
-            "ytick.labelsize": 11,
+            "axes.labelweight": "bold",
+            "axes.titleweight": "bold",
+            "font.size": 15,
+            "axes.labelsize": 16,
+            "legend.fontsize": 11.0,
+            "xtick.labelsize": 14,
+            "ytick.labelsize": 14,
         }
     )
-    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.4), constrained_layout=True)
+    fig, axes = plt.subplots(1, 3, figsize=(15.8, 5.2), constrained_layout=False)
     voltage_cols = ["V_raw", "V_corr_raw", "V_corr_raw_ema50", "V_corr_raw_ema800"]
     current_cols = ["I_raw", "I_raw_ema50", "I_raw_ema200", "absI_ema50", "absI_ema200"]
     labels = {
@@ -1029,29 +1053,63 @@ def make_feature_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir:
     for col in voltage_cols:
         g = curves[curves["feature_column_used"] == col].groupby("frequency_cycles_per_sample", as_index=False)["cumulative_energy"].mean()
         if not g.empty:
-            axes[0].plot(g["frequency_cycles_per_sample"], g["cumulative_energy"], lw=1.4, label=labels[col])
+            axes[0].plot(g["frequency_cycles_per_sample"], g["cumulative_energy"], lw=1.8, label=labels[col])
     axes[0].set_xscale("log")
     axes[0].set_xlabel("Frequency (cycles/sample)")
     axes[0].set_ylabel("Cumulative energy")
     axes[0].set_ylim(0, 1.02)
-    axes[0].legend(frameon=False)
+    axes[0].legend(
+        frameon=False,
+        loc="lower right",
+        handlelength=2.2,
+        labelspacing=0.55,
+        prop={"family": "Times New Roman", "weight": "bold", "size": 11.0},
+    )
 
     for col in current_cols:
         g = curves[curves["feature_column_used"] == col].groupby("frequency_cycles_per_sample", as_index=False)["cumulative_energy"].mean()
         if not g.empty:
-            axes[1].plot(g["frequency_cycles_per_sample"], g["cumulative_energy"], lw=1.4, label=labels[col])
+            axes[1].plot(g["frequency_cycles_per_sample"], g["cumulative_energy"], lw=1.8, label=labels[col])
     axes[1].set_xscale("log")
     axes[1].set_xlabel("Frequency (cycles/sample)")
     axes[1].set_ylabel("Cumulative energy")
     axes[1].set_ylim(0, 1.02)
-    axes[1].legend(frameon=False)
+    legend_b = axes[1].legend(
+        frameon=False,
+        loc="lower right",
+        ncol=1,
+        borderaxespad=0.45,
+        handlelength=1.9,
+        labelspacing=0.45,
+        prop={"family": "Times New Roman", "weight": "bold", "size": 11.0},
+    )
+    legend_b._legend_box.align = "right"
+    for text in legend_b.get_texts():
+        text.set_ha("right")
 
     bar_cols = ["V_raw", "V_corr_raw", "V_corr_raw_ema50", "V_corr_raw_ema800", "I_raw", "I_raw_ema50", "absI_ema50"]
+    bar_tick_labels = ["Raw V", "Corr. V", "V EMA50", "V EMA800", "Raw I", "I EMA50", "|I| EMA50"]
     g = const[const["feature_column_used"].isin(bar_cols)].groupby("feature_column_used")["high_frequency_energy_fraction"].mean()
     vals = [float(g.get(col, np.nan) * 100.0) for col in bar_cols]
     axes[2].bar(np.arange(len(bar_cols)), vals, color="#4C78A8")
     axes[2].set_ylabel("High-frequency energy (%)")
-    axes[2].set_xticks(np.arange(len(bar_cols)), [labels[c] for c in bar_cols], rotation=35, ha="right")
+    axes[2].set_xticks(np.arange(len(bar_cols)), bar_tick_labels, rotation=30, ha="right")
+    for ax in axes:
+        for label in ax.get_xticklabels() + ax.get_yticklabels():
+            label.set_fontweight("bold")
+    for panel_label, ax in zip(("(a)", "(b)", "(c)"), axes):
+        ax.text(
+            -0.075,
+            1.035,
+            panel_label,
+            transform=ax.transAxes,
+            ha="left",
+            va="bottom",
+            fontsize=20,
+            fontweight="bold",
+            clip_on=False,
+        )
+    fig.subplots_adjust(left=0.065, right=0.99, bottom=0.24, top=0.84, wspace=0.32)
     fig.savefig(figures_dir / "Figure_6_feature_frequency_behavior.png", dpi=600)
     fig.savefig(figures_dir / "Figure_6_feature_frequency_behavior.pdf")
     plt.close(fig)
@@ -1064,7 +1122,9 @@ def make_feature_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir:
     ax.set_xscale("log")
     ax.set_xlabel("Frequency (cycles/sample)")
     ax.set_ylabel("Normalized PSD")
-    ax.legend(frameon=False, ncol=2)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontweight("bold")
+    ax.legend(frameon=False, ncol=2, prop={"family": "Times New Roman", "weight": "bold", "size": 13.5})
     fig.savefig(figures_dir / "Figure_S7_feature_psd_by_group.png", dpi=600)
     fig.savefig(figures_dir / "Figure_S7_feature_psd_by_group.pdf")
     plt.close(fig)
@@ -1083,7 +1143,9 @@ def make_feature_figures(const: pd.DataFrame, curves: pd.DataFrame, figures_dir:
         ax.bar(x + (i - 2.5) * width, pivot.reindex(records)[col].to_numpy(float) * 100.0, width=width, label=labels[col])
     ax.set_ylabel("High-frequency energy (%)")
     ax.set_xticks(x, records, rotation=45, ha="right")
-    ax.legend(frameon=False, ncol=3)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontweight("bold")
+    ax.legend(frameon=False, ncol=3, prop={"family": "Times New Roman", "weight": "bold", "size": 13.5})
     fig.savefig(figures_dir / "Figure_S7_feature_frequency_by_profile_temperature.png", dpi=600)
     fig.savefig(figures_dir / "Figure_S7_feature_frequency_by_profile_temperature.pdf")
     plt.close(fig)
@@ -1243,10 +1305,24 @@ def main() -> int:
     metadata: dict[str, object] = {
         "script_version": SCRIPT_VERSION,
         "run_time_utc": datetime.now(timezone.utc).isoformat(),
-        "data_root": raw_root.as_posix(),
+        "data_root": public_path_label(raw_root, base_dir),
         "data_discovery_attempts": attempts,
         "data_discovery": discovery_diag,
-        "input_files": [asdict(m) | {"path": m.path.as_posix()} for m in records],
+        "input_files": [
+            {
+                "file_name": m.file_name,
+                "relative_path": m.relative_path,
+                "time_col": m.time_col,
+                "voltage_col": m.voltage_col,
+                "current_col": m.current_col,
+                "temperature_col": m.temperature_col,
+                "soc_col": m.soc_col,
+                "profile_col": m.profile_col,
+                "profile": m.profile,
+                "temperature_C": m.temperature_C,
+            }
+            for m in records
+        ],
         "column_mapping": [
             {
                 "file_name": m.file_name,

@@ -175,7 +175,17 @@ def choose_zoom_interval(frame: pd.DataFrame) -> tuple[int, int, float]:
 
 
 def panel_label(ax: plt.Axes, label: str) -> None:
-    ax.text(0.005, 0.96, label, transform=ax.transAxes, ha="left", va="top", fontsize=10, fontweight="bold")
+    ax.text(
+        0.0,
+        1.015,
+        label,
+        transform=ax.transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=10,
+        fontweight="bold",
+        clip_on=False,
+    )
 
 
 def plot_figure(frame: pd.DataFrame, selected: pd.Series, zoom: tuple[int, int, float], xlabel: str, out_png: Path, out_pdf: Path) -> None:
@@ -226,9 +236,7 @@ def plot_figure(frame: pd.DataFrame, selected: pd.Series, zoom: tuple[int, int, 
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
     axes[2].set_xlabel(xlabel)
-    axes[0].set_xlabel(xlabel)
-    axes[1].set_xlabel(xlabel)
-    fig.subplots_adjust(left=0.09, right=0.985, bottom=0.09, top=0.985, hspace=0.32)
+    fig.subplots_adjust(left=0.09, right=0.985, bottom=0.09, top=0.965, hspace=0.32)
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=600)
     fig.savefig(out_pdf)

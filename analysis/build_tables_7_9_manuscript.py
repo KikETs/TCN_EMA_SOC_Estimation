@@ -110,6 +110,57 @@ def selected_test_rows(path: Path) -> pd.DataFrame:
 
 
 def build_feature_ablation_by_seed(results_dirs: list[Path], source_dir: Path) -> pd.DataFrame:
+    latest_by_seed = ROOT / "output" / "revision_risk_hardening" / "tables" / "main_fuds_by_seed.csv"
+    if latest_by_seed.exists():
+        latest = pd.read_csv(latest_by_seed)
+        meta = {feature_set: (group, role, dim) for group, feature_set, role, dim in FEATURE_ROWS}
+        rows: list[dict[str, object]] = []
+        temp_rows = latest[latest["temperature_C"].astype(str).isin(["0.0", "25.0", "45.0"])].copy()
+        temp_rows["temperature_C"] = pd.to_numeric(temp_rows["temperature_C"], errors="coerce")
+        for _, r in temp_rows.iterrows():
+            feature_set = str(r["feature_set_id"])
+            if feature_set not in meta:
+                continue
+            group, role, dim = meta[feature_set]
+            rows.append(
+                {
+                    "model_name": "anchor_residual_tcn",
+                    "config_id": "paperdef_featabl_seed012_e160_latest",
+                    "seed": int(r["seed"]),
+                    "split_id": "train_0_25_45_DST_US06_BJDST__test_FUDS_0_25_45__fixed_epoch160",
+                    "train_profiles": "DST,US06,BJDST",
+                    "test_profile": "FUDS",
+                    "temperature": float(r["temperature_C"]),
+                    "metric_name": "feature_ablation_mae_pct",
+                    "metric_value": float(r["MAE"]),
+                    "notes": f"latest feature ablation 3-seed reproduction: {role}",
+                    "ablation_group": group,
+                    "feature_set": feature_set,
+                    "input_dim": dim,
+                    "result_prefix": f"paperdef_featabl_{feature_set}_seed012_e160",
+                    "run_status": "DONE",
+                    "evidence_scope": "3-seed reproduction",
+                }
+            )
+        out = pd.DataFrame(rows)
+        have = out.groupby("ablation_group")["seed"].agg(lambda s: set(int(v) for v in s)).to_dict()
+        for group, *_ in FEATURE_ROWS:
+            if have.get(group) != {0, 1, 2}:
+                raise RuntimeError(f"{group} latest feature ablation rows are incomplete: {sorted(have.get(group, set()))}")
+        tempmean_rows = []
+        for (group, feature_set, seed), sdf in out.groupby(["ablation_group", "feature_set", "seed"]):
+            temps = sdf[sdf["temperature"].isin([0.0, 25.0, 45.0])]
+            if len(temps) != 3:
+                continue
+            first = temps.iloc[0].to_dict()
+            first["temperature"] = "ALL"
+            first["metric_name"] = "feature_ablation_tempmean_mae_pct"
+            first["metric_value"] = float(temps["metric_value"].mean())
+            tempmean_rows.append(first)
+        if tempmean_rows:
+            out = pd.concat([out, pd.DataFrame(tempmean_rows)], ignore_index=True)
+        return out.sort_values(["ablation_group", "seed", "temperature"], key=lambda s: s.astype(str)).reset_index(drop=True)
+
     rows: list[dict[str, object]] = []
     g4 = pd.read_csv(source_dir / "g4_seed_reproduction_by_temp.csv")
     for _, r in g4.iterrows():
@@ -266,8 +317,7 @@ def load_predictions(results_dirs: list[Path], feature_label: str) -> pd.DataFra
     patterns = {
         "G0": ["paperdef_featabl_paper_g0_raw_seed*_e160_seed*_sel160_*_test_prediction_rows.csv.gz"],
         "G4": [
-            "paperdef_featabl_paper_g4_all_ema_seed0_e160_seed0_sel160_*_test_prediction_rows.csv.gz",
-            "paperema_g4_frozen_seed12_e160_seed*_sel160_*_test_prediction_rows.csv.gz",
+            "paperdef_featabl_paper_g4_all_ema_seed012_e160_seed*_sel160_*_test_prediction_rows.csv.gz",
         ],
     }
     frames = []

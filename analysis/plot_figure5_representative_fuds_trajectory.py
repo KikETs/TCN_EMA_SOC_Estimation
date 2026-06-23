@@ -17,14 +17,13 @@ import pandas as pd
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SUMMARY_CSV = REPO_ROOT / "paper_artifacts" / "source_metrics" / "g4_seed_reproduction_summary.csv"
 BY_TEMP_CSV = REPO_ROOT / "paper_artifacts" / "source_metrics" / "g4_seed_reproduction_by_temp.csv"
+LATEST_MAIN_FUDS_SUMMARY_CSV = REPO_ROOT / "output" / "revision_risk_hardening" / "tables" / "main_fuds_seed_summary.csv"
 OUT_PNG = REPO_ROOT / "paper_artifacts" / "figures" / "fig5_representative_fuds_soc_trajectory.png"
 OUT_PDF = REPO_ROOT / "paper_artifacts" / "figures" / "fig5_representative_fuds_soc_trajectory.pdf"
 DEFAULT_OVERALL_TEMP_MEAN_MAE = 0.41889356670972
 
 PREFERRED_PATTERNS = (
-    "paperdef_featabl_paper_g4_all_ema_seed0_e160*base_test_prediction_rows.csv*",
-    "paperema_g4_frozen_seed12_e160_seed1*base_test_prediction_rows.csv*",
-    "paperema_g4_frozen_seed12_e160_seed2*base_test_prediction_rows.csv*",
+    "paperdef_featabl_paper_g4_all_ema_seed012_e160_seed*_sel160_*base_test_prediction_rows.csv*",
 )
 ZOOM_WINDOW_POINTS = 1000
 
@@ -33,8 +32,11 @@ def set_manuscript_style() -> None:
     plt.rcParams.update(
         {
             "font.family": "Times New Roman",
+            "font.weight": "bold",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
+            "axes.labelweight": "bold",
+            "axes.titleweight": "bold",
             "axes.labelsize": 10,
             "xtick.labelsize": 9,
             "ytick.labelsize": 9,
@@ -44,6 +46,12 @@ def set_manuscript_style() -> None:
 
 
 def target_overall_mae(summary_csv: Path) -> float:
+    if LATEST_MAIN_FUDS_SUMMARY_CSV.exists():
+        latest = pd.read_csv(LATEST_MAIN_FUDS_SUMMARY_CSV)
+        mask = latest["feature_set"].astype(str).eq("G4") & latest["temperature_C"].astype(str).eq("temp_mean")
+        values = pd.to_numeric(latest.loc[mask, "MAE_mean"], errors="coerce").dropna()
+        if not values.empty:
+            return float(values.iloc[0])
     if not summary_csv.exists():
         return DEFAULT_OVERALL_TEMP_MEAN_MAE
     summary = pd.read_csv(summary_csv)
@@ -57,6 +65,15 @@ def target_overall_mae(summary_csv: Path) -> float:
 
 
 def target_mae_by_temperature(by_temp_csv: Path, fallback_overall: float) -> dict[float, float]:
+    if LATEST_MAIN_FUDS_SUMMARY_CSV.exists():
+        latest = pd.read_csv(LATEST_MAIN_FUDS_SUMMARY_CSV)
+        latest = latest[latest["feature_set"].astype(str).eq("G4")].copy()
+        latest["temperature_C_num"] = pd.to_numeric(latest["temperature_C"], errors="coerce")
+        latest["MAE_mean"] = pd.to_numeric(latest["MAE_mean"], errors="coerce")
+        latest = latest.dropna(subset=["temperature_C_num", "MAE_mean"])
+        targets = latest.groupby("temperature_C_num")["MAE_mean"].mean().to_dict()
+        if targets:
+            return {float(temp): float(mae) for temp, mae in targets.items()}
     if not by_temp_csv.exists():
         return {}
     by_temp = pd.read_csv(by_temp_csv)
@@ -83,7 +100,12 @@ def format_temp(temp: float) -> str:
 
 
 def search_roots(extra_roots: list[str]) -> list[Path]:
-    roots: list[Path] = [REPO_ROOT, REPO_ROOT / "results" / "predictions", REPO_ROOT / "feature_ablation_runs"]
+    roots: list[Path] = [
+        REPO_ROOT / "output" / "revision_risk_hardening" / "predictions" / "main_fuds",
+        REPO_ROOT / "nmc_goal_vcorr_it_train_dst_selector_results",
+        REPO_ROOT / "results" / "predictions",
+        REPO_ROOT / "feature_ablation_runs",
+    ]
     roots.extend(
         [
             REPO_ROOT.parent / "nmc_goal_vcorr_it_train_dst_selector_results",
@@ -110,13 +132,15 @@ def discover_prediction_files(extra_roots: list[str], explicit_files: list[str])
 
     found: list[Path] = []
     seen: set[Path] = set()
+    seen_file_names: set[str] = set()
     for root in search_roots(extra_roots):
         for pattern in PREFERRED_PATTERNS:
             for path in root.rglob(pattern):
                 resolved = path.resolve()
-                if resolved not in seen:
+                if resolved not in seen and resolved.name not in seen_file_names:
                     found.append(resolved)
                     seen.add(resolved)
+                    seen_file_names.add(resolved.name)
     return sorted(found)
 
 
@@ -285,23 +309,26 @@ def add_max_error_inset(
     )
     ax.add_patch(rect)
 
-    inset = ax.inset_axes([0.045, 0.065, 0.42, 0.42])
+    inset = ax.inset_axes([0.085, 0.065, 0.40, 0.42])
     inset.plot(x_zoom, y_true_zoom, color="black", linewidth=0.75)
     inset.plot(x_zoom, y_pred_zoom, color="#2F6FAE", linewidth=0.72)
     inset.set_xlim(x_min, x_max)
     inset.set_ylim(y_min - y_pad, y_max + y_pad)
-    inset.tick_params(axis="both", labelsize=6, length=2.0, pad=1.0)
+    inset.tick_params(axis="both", labelsize=6, length=2.0, pad=0.4)
+    for label in inset.get_xticklabels() + inset.get_yticklabels():
+        label.set_fontweight("bold")
     for spine in inset.spines.values():
         spine.set_linewidth(0.55)
         spine.set_edgecolor("0.25")
     inset.text(
         0.04,
-        0.95,
+        0.05,
         f"max err. {max_error:.2f}",
         transform=inset.transAxes,
         ha="left",
-        va="top",
+        va="bottom",
         fontsize=6.4,
+        fontweight="bold",
         bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 1.2},
     )
     return max_error, int(len(x_zoom))
@@ -338,9 +365,15 @@ def plot_representative(frame: pd.DataFrame, selected: pd.Series, target_mae_pct
         ha="right",
         va="top",
         fontsize=9,
+        fontweight="bold",
         bbox={"facecolor": "white", "edgecolor": "0.75", "linewidth": 0.4, "pad": 3.5},
     )
-    axes[0].legend(frameon=False, loc="lower left", ncol=2)
+    axes[0].legend(
+        frameon=False,
+        loc="lower left",
+        ncol=2,
+        prop={"family": "Times New Roman", "weight": "bold", "size": 9},
+    )
     axes[0].set_ylabel("SOC (%SOC)")
     axes[1].set_ylabel("Abs. error\n(%SOC)")
     axes[1].set_xlabel(xlabel)
@@ -348,6 +381,8 @@ def plot_representative(frame: pd.DataFrame, selected: pd.Series, target_mae_pct
     for ax in axes:
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
+        for label in ax.get_xticklabels() + ax.get_yticklabels():
+            label.set_fontweight("bold")
     fig.subplots_adjust(left=0.105, right=0.985, bottom=0.12, top=0.98)
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=600)
@@ -423,6 +458,7 @@ def plot_temperature_representatives(
             ha="right",
             va="top",
             fontsize=8.5,
+            fontweight="bold",
             bbox={"facecolor": "white", "edgecolor": "0.75", "linewidth": 0.35, "pad": 2.8},
         )
         if col == 0:
@@ -433,9 +469,19 @@ def plot_temperature_representatives(
         for ax in (ax_soc, ax_err):
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
+            for label in ax.get_xticklabels() + ax.get_yticklabels():
+                label.set_fontweight("bold")
 
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, frameon=False, loc="lower center", ncol=2, bbox_to_anchor=(0.52, 0.055))
+    fig.legend(
+        handles,
+        labels,
+        frameon=False,
+        loc="lower center",
+        ncol=2,
+        bbox_to_anchor=(0.52, 0.055),
+        prop={"family": "Times New Roman", "weight": "bold", "size": 9},
+    )
     if bottom_max > 0:
         err_ylim = np.ceil(bottom_max * 10.0) / 10.0
         for ax in axes[1, :]:

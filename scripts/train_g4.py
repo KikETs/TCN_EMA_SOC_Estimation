@@ -94,6 +94,8 @@ def main() -> int:
         model["temp_mode"],
         "--dropout",
         str(model["dropout"]),
+        "--tcn-block-convs",
+        str(model.get("tcn_block_convs", 2)),
         "--loss-kind",
         loss_kind,
         "--model-kind",

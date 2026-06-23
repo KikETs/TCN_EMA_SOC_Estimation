@@ -1,8 +1,8 @@
 | Feature set | Input role | Input dim. | 0 °C MAE | 25 °C MAE | 45 °C MAE | Temp-mean MAE | Worst-temp MAE |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| G0 | Corrected voltage + current + temperature | 3 | 1.0459 | 1.8893 | 0.2409 | 1.0587 | 1.8893 |
-| G1 | G0 + local derivatives/excitation | 8 | 0.7955 | 1.8137 | 0.2311 | 0.9468 | 1.8137 |
-| G4 | G0 + voltage/current/absolute-current EMA memory | 17 | 0.4528 | 0.4564 | 0.3474 | 0.4189 | 0.4564 |
-| G6 | G4 + derivative/excitation terms | 23 | 0.4399 | 0.6100 | 0.3820 | 0.4773 | 0.6100 |
-| G7 | G6 without current/absolute-current EMA | 15 | 0.4631 | 2.0031 | 0.3360 | 0.9341 | 2.0031 |
-| G8 | G6 without voltage EMA | 17 | 0.6239 | 0.6257 | 0.1840 | 0.4778 | 0.6257 |
+| G0 | Corrected voltage + current + temperature | 3 | 1.0592 | 1.8423 | 0.2766 | 1.0594 | 1.8423 |
+| G1 | G0 + local derivatives/excitation | 8 | 0.7927 | 1.7248 | 0.2192 | 0.9122 | 1.7248 |
+| G4 | G0 + voltage/current/absolute-current EMA memory | 17 | 0.4190 | 0.4648 | 0.3603 | 0.4147 | 0.4648 |
+| G6 | G4 + derivative/excitation terms | 23 | 0.4542 | 0.6989 | 0.3710 | 0.5081 | 0.6989 |
+| G7 | G6 without current/absolute-current EMA | 15 | 0.4632 | 2.0438 | 0.3359 | 0.9476 | 2.0438 |
+| G8 | G6 without voltage EMA | 17 | 0.6104 | 0.6100 | 0.1756 | 0.4653 | 0.6104 |

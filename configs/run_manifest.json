@@ -1,0 +1,152 @@
+{
+  "feature_sets": {
+    "G0": [
+      "V_corr_raw",
+      "I_raw",
+      "T"
+    ],
+    "G1": [
+      "V_corr_raw",
+      "I_raw",
+      "T",
+      "dI",
+      "absI",
+      "dV_corr",
+      "abs_dV_corr",
+      "d2V_corr"
+    ],
+    "G4": [
+      "V_corr_raw",
+      "I_raw",
+      "T",
+      "V_corr_raw_ema50",
+      "V_corr_raw_dev_ema50",
+      "V_corr_raw_ema200",
+      "V_corr_raw_dev_ema200",
+      "V_corr_raw_ema800",
+      "V_corr_raw_dev_ema800",
+      "I_raw_ema50",
+      "I_raw_dev_ema50",
+      "I_raw_ema200",
+      "I_raw_dev_ema200",
+      "absI_ema50",
+      "absI_dev_ema50",
+      "absI_ema200",
+      "absI_dev_ema200"
+    ],
+    "G6": [
+      "V_corr_raw",
+      "I_raw",
+      "T",
+      "dI",
+      "absI",
+      "dV_corr",
+      "abs_dV_corr",
+      "d2V_corr",
+      "Vcorr_x_absI",
+      "V_corr_raw_ema50",
+      "V_corr_raw_dev_ema50",
+      "V_corr_raw_ema200",
+      "V_corr_raw_dev_ema200",
+      "V_corr_raw_ema800",
+      "V_corr_raw_dev_ema800",
+      "I_raw_ema50",
+      "I_raw_dev_ema50",
+      "I_raw_ema200",
+      "I_raw_dev_ema200",
+      "absI_ema50",
+      "absI_dev_ema50",
+      "absI_ema200",
+      "absI_dev_ema200"
+    ],
+    "G7": [
+      "V_corr_raw",
+      "I_raw",
+      "T",
+      "dI",
+      "absI",
+      "dV_corr",
+      "abs_dV_corr",
+      "d2V_corr",
+      "Vcorr_x_absI",
+      "V_corr_raw_ema50",
+      "V_corr_raw_dev_ema50",
+      "V_corr_raw_ema200",
+      "V_corr_raw_dev_ema200",
+      "V_corr_raw_ema800",
+      "V_corr_raw_dev_ema800"
+    ],
+    "G8": [
+      "V_corr_raw",
+      "I_raw",
+      "T",
+      "dI",
+      "absI",
+      "dV_corr",
+      "abs_dV_corr",
+      "d2V_corr",
+      "Vcorr_x_absI",
+      "I_raw_ema50",
+      "I_raw_dev_ema50",
+      "I_raw_ema200",
+      "I_raw_dev_ema200",
+      "absI_ema50",
+      "absI_dev_ema50",
+      "absI_ema200",
+      "absI_dev_ema200"
+    ]
+  },
+  "git_commit": "fd25d6bda05192b223c9b9660f3c9a06e31127f7",
+  "main_protocol": {
+    "temperatures_C": [
+      0,
+      25,
+      45
+    ],
+    "test_profiles": [
+      "FUDS"
+    ],
+    "train_profiles": [
+      "DST",
+      "US06",
+      "BJDST"
+    ],
+    "valid_profiles": [
+      "BJDST"
+    ]
+  },
+  "model_hyperparameters": {
+    "anchor_residual_limit": 0.12,
+    "batch_size": 1024,
+    "dropout": 0.06,
+    "epochs": 160,
+    "hidden_size": 128,
+    "kernel_size": 5,
+    "lambda_anchor_loss": 0.1,
+    "lambda_condinv": 0.02,
+    "lambda_rex": 2.0,
+    "layers": 6,
+    "loss_kind": "huber",
+    "model_kind": "anchor_residual_tcn",
+    "recurrent": "tcn",
+    "stride": 3,
+    "tcn_block_convs": 2,
+    "window_len": 50
+  },
+  "package_versions": {
+    "matplotlib": "3.10.6",
+    "numpy": "2.3.4",
+    "pandas": "3.0.1",
+    "python": "3.12.0 | packaged by conda-forge | (main, Oct  3 2023, 08:43:22) [GCC 12.3.0]",
+    "sklearn": "1.7.2",
+    "torch": "2.9.1+cu128"
+  },
+  "path_note": "Raw CALCE files are intentionally excluded; use data/source_data_manifest.csv and configs/paths.example.yaml.",
+  "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+  "raw_data_in_repository": false,
+  "seeds": [
+    0,
+    1,
+    2
+  ]
+}

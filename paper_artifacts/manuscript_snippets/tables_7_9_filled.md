@@ -4,12 +4,12 @@
 
 | Feature set | Input role | Input dim. | 0 °C MAE | 25 °C MAE | 45 °C MAE | Temp-mean MAE | Worst-temp MAE |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| G0 | Corrected voltage + current + temperature | 3 | 1.0459 | 1.8893 | 0.2409 | 1.0587 | 1.8893 |
-| G1 | G0 + local derivatives/excitation | 8 | 0.7955 | 1.8137 | 0.2311 | 0.9468 | 1.8137 |
-| G4 | G0 + voltage/current/absolute-current EMA memory | 17 | 0.4528 | 0.4564 | 0.3474 | 0.4189 | 0.4564 |
-| G6 | G4 + derivative/excitation terms | 23 | 0.4399 | 0.6100 | 0.3820 | 0.4773 | 0.6100 |
-| G7 | G6 without current/absolute-current EMA | 15 | 0.4631 | 2.0031 | 0.3360 | 0.9341 | 2.0031 |
-| G8 | G6 without voltage EMA | 17 | 0.6239 | 0.6257 | 0.1840 | 0.4778 | 0.6257 |
+| G0 | Corrected voltage + current + temperature | 3 | 1.0592 | 1.8423 | 0.2766 | 1.0594 | 1.8423 |
+| G1 | G0 + local derivatives/excitation | 8 | 0.7927 | 1.7248 | 0.2192 | 0.9122 | 1.7248 |
+| G4 | G0 + voltage/current/absolute-current EMA memory | 17 | 0.4190 | 0.4648 | 0.3603 | 0.4147 | 0.4648 |
+| G6 | G4 + derivative/excitation terms | 23 | 0.4542 | 0.6989 | 0.3710 | 0.5081 | 0.6989 |
+| G7 | G6 without current/absolute-current EMA | 15 | 0.4632 | 2.0438 | 0.3359 | 0.9476 | 2.0438 |
+| G8 | G6 without voltage EMA | 17 | 0.6104 | 0.6100 | 0.1756 | 0.4653 | 0.6104 |
 
 ## Table 8. Spectral energy distribution of representative measurement and EMA channels.
 
@@ -27,12 +27,12 @@
 
 | region_definition | group | G0_MAE | G4_MAE | delta_MAE_G4_minus_G0 | relative_change | n_windows | seed_count_G0 | seed_count_G4 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| SOC band | Low SOC | 1.2268 | 0.5506 | -0.6762 | -55.1178 | 11765 | 3 | 3 |
-| SOC band | Mid SOC | 0.9808 | 0.4274 | -0.5534 | -56.4232 | 12334 | 3 | 3 |
-| SOC band | High SOC | 0.8830 | 0.2062 | -0.6769 | -76.6534 | 8179 | 3 | 3 |
-| Recent absolute-current history | Low | 1.0617 | 0.4543 | -0.6074 | -57.2118 | 16066 | 3 | 3 |
-| Recent absolute-current history | High | 1.0298 | 0.3786 | -0.6513 | -63.2405 | 16212 | 3 | 3 |
-| Voltage-response deviation | Low | 1.1505 | 0.4712 | -0.6793 | -59.0417 | 16066 | 3 | 3 |
-| Voltage-response deviation | High | 0.9419 | 0.3618 | -0.5801 | -61.5884 | 16212 | 3 | 3 |
-| Local V-I ambiguity | Non-ambiguous bins | 1.0451 | 0.4129 | -0.6321 | -60.4871 | 31878 | 3 | 3 |
-| Local V-I ambiguity | Ambiguous bins | 1.0967 | 0.6808 | -0.4159 | -37.9199 | 400 | 3 | 3 |
+| SOC band | Low SOC | 1.2398 | 0.5563 | -0.6835 | -55.1316 | 11765 | 3 | 3 |
+| SOC band | Mid SOC | 0.9877 | 0.4081 | -0.5796 | -58.6837 | 12334 | 3 | 3 |
+| SOC band | High SOC | 0.8568 | 0.2168 | -0.6401 | -74.7006 | 8179 | 3 | 3 |
+| Recent absolute-current history | Low | 1.0788 | 0.4324 | -0.6463 | -59.9142 | 16066 | 3 | 3 |
+| Recent absolute-current history | High | 1.0143 | 0.3950 | -0.6194 | -61.0620 | 16212 | 3 | 3 |
+| Voltage-response deviation | Low | 1.1648 | 0.4595 | -0.7053 | -60.5523 | 16066 | 3 | 3 |
+| Voltage-response deviation | High | 0.9290 | 0.3681 | -0.5609 | -60.3745 | 16212 | 3 | 3 |
+| Local V-I ambiguity | Non-ambiguous bins | 1.0459 | 0.4108 | -0.6351 | -60.7247 | 31878 | 3 | 3 |
+| Local V-I ambiguity | Ambiguous bins | 1.0870 | 0.6394 | -0.4475 | -41.1744 | 400 | 3 | 3 |

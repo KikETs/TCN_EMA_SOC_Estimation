@@ -40,8 +40,11 @@ def set_manuscript_style() -> None:
     plt.rcParams.update(
         {
             "font.family": "Times New Roman",
+            "font.weight": "bold",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
+            "axes.labelweight": "bold",
+            "axes.titleweight": "bold",
             "axes.labelsize": 10,
             "xtick.labelsize": 9,
             "ytick.labelsize": 9,
@@ -128,7 +131,15 @@ def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
     ax.barh(y + bar_h / 2.0, g4, height=bar_h, color="#3B6EA8", edgecolor="black", linewidth=0.35, label="G4 raw+EMA")
 
     for yi, value in zip(y, delta):
-        ax.text(annotation_x, yi, f"\u0394MAE={value:+.3f}", va="center", ha="left", fontsize=8.5)
+        ax.text(
+            annotation_x,
+            yi,
+            f"\u0394MAE={value:+.3f}",
+            va="center",
+            ha="left",
+            fontsize=8.5,
+            fontweight="bold",
+        )
 
     for region, center in region_centers:
         x_offset = REGION_LABEL_X.get(region, -0.20)
@@ -140,6 +151,7 @@ def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
             ha="right",
             va="center",
             fontsize=9,
+            fontweight="bold",
             linespacing=1.05,
         )
 
@@ -154,15 +166,26 @@ def plot(df: pd.DataFrame, out_png: Path, out_pdf: Path) -> None:
             ha="right",
             va="center",
             fontsize=9,
+            fontweight="bold",
         )
     ax.invert_yaxis()
-    ax.set_xlabel("MAE (%SOC)")
+    ax.set_xlabel("MAE (%SOC)", fontweight="bold")
     ax.set_xlim(0.0, annotation_x + 0.28)
     ax.set_axisbelow(True)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontweight("bold")
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, frameon=False, loc="upper center", ncol=2, bbox_to_anchor=(0.64, 0.995))
+    fig.legend(
+        handles,
+        labels,
+        frameon=False,
+        loc="upper center",
+        ncol=2,
+        bbox_to_anchor=(0.64, 0.995),
+        prop={"family": "Times New Roman", "weight": "bold", "size": 9},
+    )
     fig.subplots_adjust(left=0.39, right=0.97, bottom=0.12, top=0.91)
 
     out_png.parent.mkdir(parents=True, exist_ok=True)

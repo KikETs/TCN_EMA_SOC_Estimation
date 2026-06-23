@@ -1,10 +1,42 @@
 {
   "script_version": "frequency_structure_analysis_v1",
-  "run_time_utc": "2026-06-18T04:01:25.462251+00:00",
-  "data_root": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data",
+  "run_time_utc": "2026-06-23T06:45:45.805428+00:00",
+  "data_root": "external_raw_data/data",
   "data_discovery_attempts": [
     {
-      "searched_directory": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data",
+      "searched_directory": "data",
+      "n_csv_scanned": 15,
+      "n_terminal_files_found": 0,
+      "n_skipped_forbidden_name": 0,
+      "n_skipped_missing_required_columns": 15,
+      "n_skipped_profile_or_temperature": 0,
+      "files_inspected": [
+        "figures_source/representative_cema_traces.csv",
+        "source_data_manifest.csv",
+        "tables/acf_long.csv",
+        "tables/acf_summary.csv",
+        "tables/acf_summary_by_temperature.csv",
+        "tables/ambiguity_stratification_full.csv",
+        "tables/ambiguity_stratification_summary.csv",
+        "tables/causal_lag_correlation.csv",
+        "tables/feature_schema.csv",
+        "tables/profile_statistics.csv",
+        "tables/profile_statistics_by_temperature.csv",
+        "tables/training_coverage_with_without_BJDST.csv",
+        "tables/vi_bin_soc_ambiguity.csv",
+        "tables/vi_support_coverage.csv",
+        "tables/vi_support_density_grid.csv"
+      ],
+      "required_columns": [
+        "time or index",
+        "voltage",
+        "current",
+        "temperature/profile or filename labels",
+        "reference SOC label"
+      ]
+    },
+    {
+      "searched_directory": "external_raw_data/data",
       "n_csv_scanned": 12,
       "n_terminal_files_found": 12,
       "n_skipped_forbidden_name": 0,
@@ -34,7 +66,7 @@
     }
   ],
   "data_discovery": {
-    "searched_directory": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data",
+    "searched_directory": "external_raw_data/data",
     "n_csv_scanned": 12,
     "n_terminal_files_found": 12,
     "n_skipped_forbidden_name": 0,
@@ -64,7 +96,6 @@
   },
   "input_files": [
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_BJDST.csv",
       "file_name": "NMC_0C_BJDST.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_BJDST.csv",
       "time_col": "Test_Time(s)",
@@ -77,7 +108,6 @@
       "temperature_C": 0.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_DST.csv",
       "file_name": "NMC_0C_DST.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_DST.csv",
       "time_col": "Test_Time(s)",
@@ -90,7 +120,6 @@
       "temperature_C": 0.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_US06.csv",
       "file_name": "NMC_0C_US06.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_US06.csv",
       "time_col": "Test_Time(s)",
@@ -103,7 +132,6 @@
       "temperature_C": 0.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_FUDS.csv",
       "file_name": "NMC_0C_FUDS.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/0C/NMC_0C_FUDS.csv",
       "time_col": "Test_Time(s)",
@@ -116,7 +144,6 @@
       "temperature_C": 0.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_BJDST.csv",
       "file_name": "NMC_25C_BJDST.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_BJDST.csv",
       "time_col": "Test_Time(s)",
@@ -129,7 +156,6 @@
       "temperature_C": 25.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_DST.csv",
       "file_name": "NMC_25C_DST.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_DST.csv",
       "time_col": "Test_Time(s)",
@@ -142,7 +168,6 @@
       "temperature_C": 25.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_US06.csv",
       "file_name": "NMC_25C_US06.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_US06.csv",
       "time_col": "Test_Time(s)",
@@ -155,7 +180,6 @@
       "temperature_C": 25.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_FUDS.csv",
       "file_name": "NMC_25C_FUDS.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/25C/NMC_25C_FUDS.csv",
       "time_col": "Test_Time(s)",
@@ -168,7 +192,6 @@
       "temperature_C": 25.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_BJDST.csv",
       "file_name": "NMC_45C_BJDST.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_BJDST.csv",
       "time_col": "Test_Time(s)",
@@ -181,7 +204,6 @@
       "temperature_C": 45.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_DST.csv",
       "file_name": "NMC_45C_DST.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_DST.csv",
       "time_col": "Test_Time(s)",
@@ -194,7 +216,6 @@
       "temperature_C": 45.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_US06.csv",
       "file_name": "NMC_45C_US06.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_US06.csv",
       "time_col": "Test_Time(s)",
@@ -207,7 +228,6 @@
       "temperature_C": 45.0
     },
     {
-      "path": "/home/user/\ubc14\ud0d5\ud654\uba74/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data/NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_FUDS.csv",
       "file_name": "NMC_45C_FUDS.csv",
       "relative_path": "NMC SAMSUNG INR 18650 2Ah/45C/NMC_45C_FUDS.csv",
       "time_col": "Test_Time(s)",

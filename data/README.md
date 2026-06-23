@@ -1,18 +1,7 @@
-# Data Placement
+# Minimal Manuscript Data Package
 
-Raw CALCE/NMC files are not included in this release.
+This repository intentionally excludes raw CALCE data archives and model checkpoints. The files in `data/`, `results/`, `audits/`, and `configs/` provide the minimum manuscript/SI source metrics needed to recompute the reported tables and figures.
 
-Place the raw files under:
+Raw data provenance is recorded in `data/source_data_manifest.csv` with CALCE archive names and SHA256 checksums. Rebuild scripts use `configs/paths.example.yaml` to point to local raw files.
 
-```text
-data/raw/NMC_SAMSUNG_INR_18650_2Ah/
-```
-
-The repository ignores `data/raw/`, `data/processed/`, and `data/cache/` so local data are not committed accidentally.
-
-Expected drive profiles for the frozen G4 protocol:
-
-- train: `DST`, `US06`, `BJDST`
-- test: `FUDS`
-- temperatures: `0C`, `25C`, `45C`
-
+Large prediction-row files and leave-one-profile-out scratch outputs are not part of this minimal package unless they are explicitly needed for a manuscript table or figure.

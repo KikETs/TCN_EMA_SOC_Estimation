@@ -2,7 +2,7 @@
 
 ## 1. Data and Feature Discovery
 
-- Data root: `/home/user/바탕화면/DL/LSTM_STATELESS_DECOMP_SOC/nmc_soc_ocvstart_relabelled_from_lc_ocv/data`
+- Data root: `external_raw_data/data`
 - Raw records included: 12 / 12
 - Corrected-voltage source: V_corr_raw = causal_time_ema(Voltage(V) - Current(A) * R0_temperature, tau=120 s), with R0 estimated from BJDST/DST/US06 events only.
 

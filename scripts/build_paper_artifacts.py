@@ -37,9 +37,12 @@ def set_manuscript_figure_style() -> None:
     plt.rcParams.update(
         {
             "font.family": "Times New Roman",
+            "font.weight": "bold",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
             "axes.titlesize": 11,
+            "axes.titleweight": "bold",
+            "axes.labelweight": "bold",
             "axes.labelsize": 10,
             "xtick.labelsize": 9,
             "ytick.labelsize": 9,
@@ -154,7 +157,7 @@ def bar_by_temp(
         pivot = pivot.rename(columns={col: format_temp_label(col) for col in pivot.columns})
     figsize = (11.6, 5.6) if large_font else (9, 4.8)
     ax = pivot.plot(kind="bar", figsize=figsize, width=0.82)
-    ax.set_ylabel("MAE (%)")
+    ax.set_ylabel("MAE (%)", fontweight="bold")
     ax.set_xlabel("")
     if large_font:
         ax.yaxis.label.set_size(16)
@@ -163,12 +166,17 @@ def bar_by_temp(
         for label in ax.get_xticklabels():
             label.set_rotation(0)
             label.set_ha("center")
-        ax.legend(fontsize=15, loc=legend_loc)
+            label.set_fontweight("bold")
+        for label in ax.get_yticklabels():
+            label.set_fontweight("bold")
+        ax.legend(prop={"family": "Times New Roman", "weight": "bold", "size": 15}, loc=legend_loc)
     else:
-        ax.legend(fontsize=8, loc=legend_loc)
+        for label in ax.get_xticklabels() + ax.get_yticklabels():
+            label.set_fontweight("bold")
+        ax.legend(prop={"family": "Times New Roman", "weight": "bold", "size": 8}, loc=legend_loc)
     plt.tight_layout()
     fig_dir.mkdir(parents=True, exist_ok=True)
-    plt.savefig(fig_dir / f"{out_stem}.png", dpi=180)
+    plt.savefig(fig_dir / f"{out_stem}.png", dpi=600)
     plt.savefig(fig_dir / f"{out_stem}.pdf")
     plt.close()
 
