@@ -29,9 +29,9 @@ from plot_figure7_voltage_current_abs_current_behavior import (  # noqa: E402
 )
 
 
-DEFAULT_TEMPLATE = Path("/home/user/.codex/attachments/377d97ca-2e97-40fe-85cc-d3ac1fa18ba3/manuscript_SOC_Figure.svg")
 OUT_SVG = REPO_ROOT / "Figures" / "figure_4_cema_tcn_workflow.svg"
-SOURCE_FIGURES = Path("/home/user/바탕화면/DL/LSTM_STATELESS_DECOMP_SOC/g4_ema_soc_release/paper_artifacts/figures")
+DEFAULT_TEMPLATE = OUT_SVG
+SOURCE_FIGURES = REPO_ROOT / "Figures"
 PLOT_BOX = {"x": 334.0, "y": 69.0, "width": 293.0, "height": 253.0}
 NORMALIZATION_FORMULA_BOX = {"x": 405.0, "y": 632.0, "width": 150.0, "height": 48.0}
 SVG_NS = "http://www.w3.org/2000/svg"
@@ -445,19 +445,28 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def copy_if_distinct(src: Path, dst: Path) -> None:
+    if not src.exists():
+        if dst.exists():
+            return
+        raise FileNotFoundError(f"Required figure source not found: {src}")
+    if src.resolve() != dst.resolve():
+        shutil.copy2(src, dst)
+
+
 def main() -> int:
     args = parse_args()
     replace_cema_group(Path(args.template), Path(args.out_svg))
     out_svg = Path(args.out_svg)
     out_dir = out_svg.parent
-    src_png = SOURCE_FIGURES / "manuscript_SOC_Figure_template_matplotlib.png"
-    src_pdf = SOURCE_FIGURES / "manuscript_SOC_Figure_template_matplotlib.pdf"
     out_png = out_dir / "figure_4_cema_tcn_workflow.png"
     out_pdf = out_dir / "figure_4_cema_tcn_workflow.pdf"
     out_tif = out_dir / "figure_4_cema_tcn_workflow.tif"
-    shutil.copy2(src_png, out_png)
-    shutil.copy2(src_pdf, out_pdf)
-    Image.open(src_png).convert("RGB").save(out_tif, dpi=(600, 600))
+    src_png = SOURCE_FIGURES / "figure_4_cema_tcn_workflow.png"
+    src_pdf = SOURCE_FIGURES / "figure_4_cema_tcn_workflow.pdf"
+    copy_if_distinct(src_png, out_png)
+    copy_if_distinct(src_pdf, out_pdf)
+    Image.open(out_png).convert("RGB").save(out_tif, dpi=(600, 600))
     print(f"Wrote {Path(args.out_svg)}")
     print(f"Wrote {out_png}")
     return 0

@@ -31,3 +31,29 @@ Training example:
 ```bash
 python Models/train.py --model cema_tcn --feature-set G4 --test-profile FUDS
 ```
+
+Default input:
+
+```text
+Data/processed/
+```
+
+Default output:
+
+```text
+Results/model_runs/<run_id>/
+```
+
+Output files:
+
+```text
+run_config.json
+input_schema.csv
+scaler_stats.csv
+metrics_history.csv
+summary_metrics.csv
+by_temperature.csv
+test_predictions.csv
+```
+
+Checkpoints are only written when `--save-checkpoint` is passed. `Results/model_runs/` and checkpoint files are ignored by Git.

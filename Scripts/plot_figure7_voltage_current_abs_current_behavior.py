@@ -21,9 +21,9 @@ if str(REPO_ROOT) not in sys.path:
 import plot_figure7_corrected_voltage_behavior as fig7  # noqa: E402
 
 
-OUT_PNG = REPO_ROOT / "paper_artifacts" / "figures" / "fig7_voltage_current_abs_current_behavior.png"
-OUT_PDF = REPO_ROOT / "paper_artifacts" / "figures" / "fig7_voltage_current_abs_current_behavior.pdf"
-OUT_SVG = REPO_ROOT / "paper_artifacts" / "figures" / "fig7_voltage_current_abs_current_behavior.svg"
+OUT_PNG = REPO_ROOT / "Figures" / "figure_aux_voltage_current_abs_current_behavior.png"
+OUT_PDF = REPO_ROOT / "Figures" / "figure_aux_voltage_current_abs_current_behavior.pdf"
+OUT_SVG = REPO_ROOT / "Figures" / "figure_aux_voltage_current_abs_current_behavior.svg"
 REQUIRED_COLUMNS = [
     "V_corr_raw",
     "V_corr_raw_ema50",

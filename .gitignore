@@ -15,6 +15,9 @@ Data/processed/*
 
 # Full prediction dumps and large/intermediate training outputs are excluded.
 Data/predictions/**/*.csv.gz
+Results/cache/
+Results/model_runs/*
+!Results/model_runs/README.md
 **/checkpoints/
 *.ckpt
 *.pt

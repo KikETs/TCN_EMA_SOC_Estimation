@@ -36,8 +36,8 @@ from build_frequency_structure_analysis import (  # noqa: E402
 )
 
 
-OUT_PNG = REPO_ROOT / "paper_artifacts" / "figures" / "fig7_corrected_voltage_behavior.png"
-OUT_PDF = REPO_ROOT / "paper_artifacts" / "figures" / "fig7_corrected_voltage_behavior.pdf"
+OUT_PNG = REPO_ROOT / "Figures" / "figure_8_corrected_voltage_behavior.png"
+OUT_PDF = REPO_ROOT / "Figures" / "figure_8_corrected_voltage_behavior.pdf"
 PREFERRED_TEMPERATURE_C = 25.0
 REQUIRED_COLUMNS = ["V_raw", "V_corr_raw", "V_corr_raw_ema50", "V_corr_raw_ema200", "V_corr_raw_ema800"]
 

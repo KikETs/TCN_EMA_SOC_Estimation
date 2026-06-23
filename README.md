@@ -121,4 +121,34 @@ Example:
 python Models/train.py --model cema_tcn --feature-set G4 --test-profile FUDS
 ```
 
+By default, local training outputs are written to:
+
+```text
+Results/model_runs/<model>_<feature-set>_holdout-<profile>_seed<seed>/
+```
+
+Each run directory contains:
+
+```text
+run_config.json
+input_schema.csv
+scaler_stats.csv
+metrics_history.csv
+summary_metrics.csv
+by_temperature.csv
+test_predictions.csv
+```
+
+Example with an explicit run id:
+
+```bash
+python Models/train.py \
+  --model cema_tcn \
+  --feature-set G4 \
+  --test-profile FUDS \
+  --run-id g4_fuds_seed0
+```
+
+Checkpoints are not saved by default. To save a local checkpoint under the ignored run directory, pass `--save-checkpoint`.
+
 The proposed TCN uses one causal-convolution sublayer per residual block. The older two-sublayer variant is intentionally excluded.

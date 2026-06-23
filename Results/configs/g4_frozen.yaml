@@ -4,10 +4,10 @@ experiment:
   description: Frozen G4 candidate using causal EMA memory features under strict NoCC input rules.
 
 paths:
-  raw_root: data/raw/NMC_SAMSUNG_INR_18650_2Ah
-  processed_root: data/processed
-  cache_root: data/cache
-  results_root: results
+  raw_root: Data/raw_dynamic
+  processed_root: Data/processed
+  cache_root: Results/cache
+  results_root: Results/model_runs
 
 data:
   train_profiles: [DST, US06, BJDST]
@@ -70,4 +70,3 @@ disclosure:
   predeclared_blind_model: false
   no_global_sota_claim: true
   no_temperature_extrapolation_claim: true
-

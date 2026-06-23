@@ -159,12 +159,9 @@ def candidate_roots(cwd: Path, data_root: str | None) -> list[Path]:
     if data_root:
         return [Path(data_root).expanduser().resolve()]
     roots = [
-        cwd / "data",
-        cwd / "data" / "raw",
-        cwd / "data" / "processed",
-        cwd / "datasets",
-        cwd / "nmc_data",
-        cwd / "paper_ema_analysis_package",
+        cwd / "Data" / "raw_dynamic",
+        cwd / "Data" / "processed",
+        cwd / "Data",
         cwd,
     ]
     seen: set[Path] = set()

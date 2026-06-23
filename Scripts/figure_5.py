@@ -17,9 +17,9 @@ from PIL import Image
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TEMPLATE = Path("/home/user/.codex/attachments/947c26cb-a764-4ae8-8e06-910e108c2466/슬라이드2.SVG")
 OUT_SVG = REPO_ROOT / "Figures" / "figure_5_cema_tcn_endpoint_estimator.svg"
-SOURCE_FIGURES = Path("/home/user/바탕화면/DL/LSTM_STATELESS_DECOMP_SOC/g4_ema_soc_release/paper_artifacts/figures")
+DEFAULT_TEMPLATE = OUT_SVG
+SOURCE_FIGURES = REPO_ROOT / "Figures"
 SVG_NS = "http://www.w3.org/2000/svg"
 NS = {"svg": SVG_NS}
 RECT_PATH_RE = re.compile(
@@ -225,19 +225,28 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def copy_if_distinct(src: Path, dst: Path) -> None:
+    if not src.exists():
+        if dst.exists():
+            return
+        raise FileNotFoundError(f"Required figure source not found: {src}")
+    if src.resolve() != dst.resolve():
+        shutil.copy2(src, dst)
+
+
 def main() -> int:
     args = parse_args()
     replace_b_panel(Path(args.template), Path(args.out_svg))
     out_svg = Path(args.out_svg)
     out_dir = out_svg.parent
-    src_png = SOURCE_FIGURES / "slide2_silu_activation_panel.png"
-    src_pdf = SOURCE_FIGURES / "slide2_silu_activation_panel.pdf"
     out_png = out_dir / "figure_5_cema_tcn_endpoint_estimator.png"
     out_pdf = out_dir / "figure_5_cema_tcn_endpoint_estimator.pdf"
     out_tif = out_dir / "figure_5_cema_tcn_endpoint_estimator.tif"
-    shutil.copy2(src_png, out_png)
-    shutil.copy2(src_pdf, out_pdf)
-    Image.open(src_png).convert("RGB").save(out_tif, dpi=(600, 600))
+    src_png = SOURCE_FIGURES / "figure_5_cema_tcn_endpoint_estimator.png"
+    src_pdf = SOURCE_FIGURES / "figure_5_cema_tcn_endpoint_estimator.pdf"
+    copy_if_distinct(src_png, out_png)
+    copy_if_distinct(src_pdf, out_pdf)
+    Image.open(out_png).convert("RGB").save(out_tif, dpi=(600, 600))
     print(f"Wrote {Path(args.out_svg)}")
     print(f"Wrote {out_png}")
     return 0

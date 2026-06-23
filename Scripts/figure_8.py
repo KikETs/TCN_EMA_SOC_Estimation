@@ -125,7 +125,7 @@ def prediction_search_roots(extra_roots: list[str]) -> list[Path]:
         REPO_ROOT / "Data" / "predictions" / "main_fuds",
         REPO_ROOT / "output" / "revision_risk_hardening" / "predictions" / "main_fuds",
         REPO_ROOT / "nmc_goal_vcorr_it_train_dst_selector_results",
-        REPO_ROOT / "results" / "predictions",
+        REPO_ROOT / "Results" / "predictions",
         REPO_ROOT / "feature_ablation_runs",
         REPO_ROOT.parent / "nmc_goal_vcorr_it_train_dst_selector_results",
         REPO_ROOT.parent / "remote_result_summaries",

@@ -1288,7 +1288,7 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Build manuscript frequency-domain analysis outputs for raw measurements and EMA features.")
     p.add_argument("--base-dir", default=".")
     p.add_argument("--data-root", default="auto")
-    p.add_argument("--out-dir", default="paper_ema_analysis_package/frequency_structure_analysis")
+    p.add_argument("--out-dir", default="Data/frequency_structure_analysis")
     return p.parse_args()
 
 

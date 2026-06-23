@@ -104,7 +104,7 @@ def search_roots(extra_roots: list[str]) -> list[Path]:
         REPO_ROOT / "Data" / "predictions" / "main_fuds",
         REPO_ROOT / "output" / "revision_risk_hardening" / "predictions" / "main_fuds",
         REPO_ROOT / "nmc_goal_vcorr_it_train_dst_selector_results",
-        REPO_ROOT / "results" / "predictions",
+        REPO_ROOT / "Results" / "predictions",
         REPO_ROOT / "feature_ablation_runs",
     ]
     roots.extend(
@@ -527,7 +527,7 @@ def main() -> int:
     if not paths:
         raise FileNotFoundError(
             "No frozen G4 FUDS prediction-row files found. "
-            "Place them under results directories, set G4_PREDICTION_ROOTS, or pass --prediction-files."
+            "Place them under Results/predictions or Data/predictions, set G4_PREDICTION_ROOTS, or pass --prediction-files."
         )
 
     frames = [read_prediction_rows(path) for path in paths]
