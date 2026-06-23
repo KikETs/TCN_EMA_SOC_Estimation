@@ -1,0 +1,5 @@
+test_profile,temperature,MAE_percent,MAE_std,RMSE_percent,MaxAE_percent
+FUDS,0 C,0.4190,0.0321,0.5409,1.7887
+FUDS,25 C,0.4648,0.1431,0.6805,3.0918
+FUDS,45 C,0.3603,0.0574,0.4696,1.6140
+FUDS,Mean,0.4136,0.0354,0.5791,3.0918

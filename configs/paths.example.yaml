@@ -1,6 +1,0 @@
-raw_root: data/raw/NMC_SAMSUNG_INR_18650_2Ah
-processed_root: data/processed
-cache_root: data/cache
-results_root: results
-paper_artifacts_root: paper_artifacts
-

@@ -1,54 +1,27 @@
-# Raw and processed battery data are intentionally excluded.
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-data/cache/*
-!data/cache/.gitkeep
-
-# Runtime outputs.
-results/checkpoints/*
-!results/checkpoints/.gitkeep
-results/predictions/*
-!results/predictions/.gitkeep
-results/metrics/*
-!results/metrics/.gitkeep
-results/figures/*
-!results/figures/.gitkeep
-
-# Heavy or generated ML artifacts.
-*.pt
-*.pth
-*.ckpt
-*.onnx
-*.npy
-*.npz
-*.pkl
-*.joblib
-*.zip
-*.tar
-*.tar.gz
-*.tgz
-*.7z
-*.h5
-*.hdf5
-
-# Python and notebook noise.
 __pycache__/
 *.py[cod]
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
 .ipynb_checkpoints/
+.pytest_cache/
 
-# Local environments and OS files.
-.venv/
-venv/
-env/
-.env
-.DS_Store
-Thumbs.db
+# Raw CALCE files are not redistributed.
+Data/raw_dynamic/*
+!Data/raw_dynamic/README.md
+Data/raw_reference/*
+!Data/raw_reference/README.md
 
-# Local training scratch outputs.
-nmc_goal_vcorr_it_train_dst_selector_results/
-feature_ablation_runs/
+# Driving-profile processed records are generated locally from raw CALCE files.
+Data/processed/*
+!Data/processed/README.md
+
+# Full prediction dumps and large/intermediate training outputs are excluded.
+Data/predictions/**/*.csv.gz
+**/checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.pkl
+*.joblib
+
+# Large camera-ready rasters are generated locally by the figure scripts.
+*.tif
+*.tiff

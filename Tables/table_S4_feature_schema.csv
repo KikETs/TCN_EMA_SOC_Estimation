@@ -1,0 +1,7 @@
+Feature set,Dim.,Full input channels,Role
+G0,3,"V_corr_raw, I_raw, T","Corrected-voltage, current, and temperature baseline"
+G1,8,"V_corr_raw, I_raw, T, dI, absI, dV_corr, abs_dV_corr, d2V_corr",G0 plus local derivative and excitation descriptors
+G4,17,"V_corr_raw, I_raw, T, V_corr_raw_ema50, V_corr_raw_dev_ema50, V_corr_raw_ema200, V_corr_raw_dev_ema200, V_corr_raw_ema800, V_corr_raw_dev_ema800, I_raw_ema50, I_raw_dev_ema50, I_raw_ema200, I_raw_dev_ema200, absI_ema50, absI_dev_ema50, absI_ema200, absI_dev_ema200",Proposed causal EMA representation
+G6,23,"V_corr_raw, I_raw, T, dI, absI, dV_corr, abs_dV_corr, d2V_corr, Vcorr_x_absI, V_corr_raw_ema50, V_corr_raw_dev_ema50, V_corr_raw_ema200, V_corr_raw_dev_ema200, V_corr_raw_ema800, V_corr_raw_dev_ema800, I_raw_ema50, I_raw_dev_ema50, I_raw_ema200, I_raw_dev_ema200, absI_ema50, absI_dev_ema50, absI_ema200, absI_dev_ema200","G4 plus local derivative, excitation, and interaction descriptors"
+G7,15,"V_corr_raw, I_raw, T, dI, absI, dV_corr, abs_dV_corr, d2V_corr, Vcorr_x_absI, V_corr_raw_ema50, V_corr_raw_dev_ema50, V_corr_raw_ema200, V_corr_raw_dev_ema200, V_corr_raw_ema800, V_corr_raw_dev_ema800",Voltage-memory-only ablation with local descriptors
+G8,17,"V_corr_raw, I_raw, T, dI, absI, dV_corr, abs_dV_corr, d2V_corr, Vcorr_x_absI, I_raw_ema50, I_raw_dev_ema50, I_raw_ema200, I_raw_dev_ema200, absI_ema50, absI_dev_ema50, absI_ema200, absI_dev_ema200",Current-memory-only ablation with local descriptors

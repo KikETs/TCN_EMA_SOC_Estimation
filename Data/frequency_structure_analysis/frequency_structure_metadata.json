@@ -1,0 +1,635 @@
+{
+  "script_version": "frequency_structure_analysis_v1",
+  "run_time_utc": "2026-06-23T13:06:29.542087+00:00",
+  "data_root": "Data/processed",
+  "data_discovery_attempts": [
+    {
+      "searched_directory": "Data/processed",
+      "n_csv_scanned": 12,
+      "n_terminal_files_found": 12,
+      "n_skipped_forbidden_name": 0,
+      "n_skipped_missing_required_columns": 0,
+      "n_skipped_profile_or_temperature": 0,
+      "files_inspected": [
+        "0C/NMC_0C_BJDST.csv",
+        "0C/NMC_0C_DST.csv",
+        "0C/NMC_0C_FUDS.csv",
+        "0C/NMC_0C_US06.csv",
+        "25C/NMC_25C_BJDST.csv",
+        "25C/NMC_25C_DST.csv",
+        "25C/NMC_25C_FUDS.csv",
+        "25C/NMC_25C_US06.csv",
+        "45C/NMC_45C_BJDST.csv",
+        "45C/NMC_45C_DST.csv",
+        "45C/NMC_45C_FUDS.csv",
+        "45C/NMC_45C_US06.csv"
+      ],
+      "required_columns": [
+        "time or index",
+        "voltage",
+        "current",
+        "temperature/profile or filename labels",
+        "reference SOC label"
+      ]
+    }
+  ],
+  "data_discovery": {
+    "searched_directory": "Data/processed",
+    "n_csv_scanned": 12,
+    "n_terminal_files_found": 12,
+    "n_skipped_forbidden_name": 0,
+    "n_skipped_missing_required_columns": 0,
+    "n_skipped_profile_or_temperature": 0,
+    "files_inspected": [
+      "0C/NMC_0C_BJDST.csv",
+      "0C/NMC_0C_DST.csv",
+      "0C/NMC_0C_FUDS.csv",
+      "0C/NMC_0C_US06.csv",
+      "25C/NMC_25C_BJDST.csv",
+      "25C/NMC_25C_DST.csv",
+      "25C/NMC_25C_FUDS.csv",
+      "25C/NMC_25C_US06.csv",
+      "45C/NMC_45C_BJDST.csv",
+      "45C/NMC_45C_DST.csv",
+      "45C/NMC_45C_FUDS.csv",
+      "45C/NMC_45C_US06.csv"
+    ],
+    "required_columns": [
+      "time or index",
+      "voltage",
+      "current",
+      "temperature/profile or filename labels",
+      "reference SOC label"
+    ]
+  },
+  "input_files": [
+    {
+      "file_name": "NMC_0C_BJDST.csv",
+      "relative_path": "0C/NMC_0C_BJDST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "BJDST",
+      "temperature_C": 0.0
+    },
+    {
+      "file_name": "NMC_0C_DST.csv",
+      "relative_path": "0C/NMC_0C_DST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "DST",
+      "temperature_C": 0.0
+    },
+    {
+      "file_name": "NMC_0C_US06.csv",
+      "relative_path": "0C/NMC_0C_US06.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "US06",
+      "temperature_C": 0.0
+    },
+    {
+      "file_name": "NMC_0C_FUDS.csv",
+      "relative_path": "0C/NMC_0C_FUDS.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "FUDS",
+      "temperature_C": 0.0
+    },
+    {
+      "file_name": "NMC_25C_BJDST.csv",
+      "relative_path": "25C/NMC_25C_BJDST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "BJDST",
+      "temperature_C": 25.0
+    },
+    {
+      "file_name": "NMC_25C_DST.csv",
+      "relative_path": "25C/NMC_25C_DST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "DST",
+      "temperature_C": 25.0
+    },
+    {
+      "file_name": "NMC_25C_US06.csv",
+      "relative_path": "25C/NMC_25C_US06.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "US06",
+      "temperature_C": 25.0
+    },
+    {
+      "file_name": "NMC_25C_FUDS.csv",
+      "relative_path": "25C/NMC_25C_FUDS.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "FUDS",
+      "temperature_C": 25.0
+    },
+    {
+      "file_name": "NMC_45C_BJDST.csv",
+      "relative_path": "45C/NMC_45C_BJDST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "BJDST",
+      "temperature_C": 45.0
+    },
+    {
+      "file_name": "NMC_45C_DST.csv",
+      "relative_path": "45C/NMC_45C_DST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "DST",
+      "temperature_C": 45.0
+    },
+    {
+      "file_name": "NMC_45C_US06.csv",
+      "relative_path": "45C/NMC_45C_US06.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "US06",
+      "temperature_C": 45.0
+    },
+    {
+      "file_name": "NMC_45C_FUDS.csv",
+      "relative_path": "45C/NMC_45C_FUDS.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile",
+      "profile": "FUDS",
+      "temperature_C": 45.0
+    }
+  ],
+  "column_mapping": [
+    {
+      "file_name": "NMC_0C_BJDST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_0C_DST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_0C_US06.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_0C_FUDS.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_25C_BJDST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_25C_DST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_25C_US06.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_25C_FUDS.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_45C_BJDST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_45C_DST.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_45C_US06.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    },
+    {
+      "file_name": "NMC_45C_FUDS.csv",
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "temperature_col": "TempLabel",
+      "soc_col": "SOC_CC",
+      "profile_col": "Profile"
+    }
+  ],
+  "psd_method": "Welch PSD with nonzero-frequency normalization",
+  "band_definitions": {
+    "low_frequency": "f < 1/200 cycles/sample",
+    "mid_frequency": "1/200 <= f < 1/50 cycles/sample",
+    "high_frequency": "f >= 1/50 cycles/sample"
+  },
+  "welch_parameters": {
+    "nperseg": 1024,
+    "method": "scipy.signal.welch",
+    "noverlap": 512
+  },
+  "feature_source": "Local analysis implementation copied from repository feature equations: soc_decomp.nmc_branchbands_experiment.estimate_r0_by_temperature/build_decomposed_frame and soc_decomp.nmc_vit_feature_lstm_experiment.causal_index_ema/add_vit_engineered_features.",
+  "corrected_voltage_source": "V_corr_raw = causal_time_ema(Voltage(V) - Current(A) * R0_temperature, tau=120 s), with R0 estimated from BJDST/DST/US06 events only.",
+  "r0_estimates": [
+    {
+      "temperature_C": 0.0,
+      "r0_ohm": 0.10286673023849391,
+      "n_events": 8557,
+      "r0_p20_ohm": 0.09579243183763309,
+      "r0_p80_ohm": 0.1164087433707814
+    },
+    {
+      "temperature_C": 25.0,
+      "r0_ohm": 0.0731768179418159,
+      "n_events": 9704,
+      "r0_p20_ohm": 0.0708758986154993,
+      "r0_p80_ohm": 0.0776112799592067
+    },
+    {
+      "temperature_C": 45.0,
+      "r0_ohm": 0.0762627696661229,
+      "n_events": 9905,
+      "r0_p20_ohm": 0.07432169785868195,
+      "r0_p80_ohm": 0.07878305762972997
+    }
+  ],
+  "n_feature_records": 12,
+  "feature_columns_used": [
+    "V_raw",
+    "V_corr_raw",
+    "I_raw",
+    "V_corr_raw_ema50",
+    "V_corr_raw_ema200",
+    "V_corr_raw_ema800",
+    "I_raw_ema50",
+    "I_raw_ema200",
+    "absI_ema50",
+    "absI_ema200",
+    "V_corr_raw_dev_ema50",
+    "V_corr_raw_dev_ema200",
+    "V_corr_raw_dev_ema800",
+    "I_raw_dev_ema50",
+    "I_raw_dev_ema200",
+    "absI_dev_ema50",
+    "absI_dev_ema200"
+  ],
+  "sampling_interval_summary": [
+    {
+      "file_name": "NMC_0C_BJDST.csv",
+      "profile": "BJDST",
+      "temperature_C": 0.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155500000000757,
+      "sampling_interval_relative_max_deviation": 0.9384471468664835,
+      "physical_time_reliable": false,
+      "duration_s": 10279.46662,
+      "n_samples": 10172
+    },
+    {
+      "file_name": "NMC_0C_DST.csv",
+      "profile": "DST",
+      "temperature_C": 0.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155100000010862,
+      "sampling_interval_relative_max_deviation": 0.877004657758397,
+      "physical_time_reliable": false,
+      "duration_s": 9608.00446,
+      "n_samples": 9527
+    },
+    {
+      "file_name": "NMC_0C_US06.csv",
+      "profile": "US06",
+      "temperature_C": 0.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155400000003283,
+      "sampling_interval_relative_max_deviation": 0.907733816494087,
+      "physical_time_reliable": false,
+      "duration_s": 9577.044880000001,
+      "n_samples": 9482
+    },
+    {
+      "file_name": "NMC_0C_FUDS.csv",
+      "profile": "FUDS",
+      "temperature_C": 0.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0154900000015914,
+      "sampling_interval_relative_max_deviation": 0.8615052831625918,
+      "physical_time_reliable": false,
+      "duration_s": 9803.739889999997,
+      "n_samples": 9707
+    },
+    {
+      "file_name": "NMC_25C_BJDST.csv",
+      "profile": "BJDST",
+      "temperature_C": 25.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0029199999989942,
+      "sampling_interval_relative_max_deviation": 0.8734794400317936,
+      "physical_time_reliable": false,
+      "duration_s": 11228.44263,
+      "n_samples": 11205
+    },
+    {
+      "file_name": "NMC_25C_DST.csv",
+      "profile": "DST",
+      "temperature_C": 25.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155400000003283,
+      "sampling_interval_relative_max_deviation": 0.8462591330727072,
+      "physical_time_reliable": false,
+      "duration_s": 10710.21157,
+      "n_samples": 10621
+    },
+    {
+      "file_name": "NMC_25C_US06.csv",
+      "profile": "US06",
+      "temperature_C": 25.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0154099999999744,
+      "sampling_interval_relative_max_deviation": 0.9386454732575048,
+      "physical_time_reliable": false,
+      "duration_s": 10776.86876,
+      "n_samples": 10680
+    },
+    {
+      "file_name": "NMC_25C_FUDS.csv",
+      "profile": "FUDS",
+      "temperature_C": 25.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155400000003283,
+      "sampling_interval_relative_max_deviation": 0.9230655611776322,
+      "physical_time_reliable": false,
+      "duration_s": 11200.294979999999,
+      "n_samples": 11092
+    },
+    {
+      "file_name": "NMC_45C_BJDST.csv",
+      "profile": "BJDST",
+      "temperature_C": 45.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155500000000757,
+      "sampling_interval_relative_max_deviation": 0.907675643740101,
+      "physical_time_reliable": false,
+      "duration_s": 11501.530030000002,
+      "n_samples": 11390
+    },
+    {
+      "file_name": "NMC_45C_DST.csv",
+      "profile": "DST",
+      "temperature_C": 45.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155400000003283,
+      "sampling_interval_relative_max_deviation": 0.9691888059564573,
+      "physical_time_reliable": false,
+      "duration_s": 11400.47451,
+      "n_samples": 11304
+    },
+    {
+      "file_name": "NMC_45C_US06.csv",
+      "profile": "US06",
+      "temperature_C": 45.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.0155699999995704,
+      "sampling_interval_relative_max_deviation": 0.9538781177081983,
+      "physical_time_reliable": false,
+      "duration_s": 10993.0851,
+      "n_samples": 10884
+    },
+    {
+      "file_name": "NMC_45C_FUDS.csv",
+      "profile": "FUDS",
+      "temperature_C": 45.0,
+      "time_col": "Test_Time(s)",
+      "voltage_col": "Voltage(V)",
+      "current_col": "Current(A)",
+      "soc_col": "SOC_CC",
+      "sampling_interval_median_s": 1.015559999999823,
+      "sampling_interval_relative_max_deviation": 0.9847867186587039,
+      "physical_time_reliable": false,
+      "duration_s": 11745.96403,
+      "n_samples": 11626
+    }
+  ],
+  "ema_spans_detected": [
+    50,
+    200,
+    800
+  ],
+  "excluded_files": {
+    "name_tokens": [
+      "prediction",
+      "residual",
+      "ablation",
+      "perturbation",
+      "baseline",
+      "rotation",
+      "epoch",
+      "checkpoint",
+      "forbidden",
+      "error_by",
+      "model_output"
+    ],
+    "count_from_discovery": 0
+  },
+  "output_file_list": [
+    "tables/Table_S6_raw_signal_frequency_summary_by_record.csv",
+    "tables/Table_5_raw_signal_frequency_summary_compact.csv",
+    "tables/Table_5_raw_signal_frequency_summary_compact.md",
+    "figures/Figure_3_raw_signal_frequency_structure.png",
+    "figures/Figure_3_raw_signal_frequency_structure.pdf",
+    "figures/Figure_S6_raw_signal_frequency_by_profile_temperature.png",
+    "figures/Figure_S6_raw_signal_frequency_by_profile_temperature.pdf",
+    "figures/Figure_S6_raw_signal_cumulative_energy.png",
+    "figures/Figure_S6_raw_signal_cumulative_energy.pdf",
+    "tables/section2_4_frequency_values_for_manuscript.md",
+    "tables/Table_S7_feature_frequency_summary_by_record.csv",
+    "tables/Table_7_feature_frequency_summary_compact.csv",
+    "tables/Table_7_feature_frequency_summary_compact.md",
+    "figures/Figure_6_feature_frequency_behavior.png",
+    "figures/Figure_6_feature_frequency_behavior.pdf",
+    "figures/Figure_S7_feature_psd_by_group.png",
+    "figures/Figure_S7_feature_psd_by_group.pdf",
+    "figures/Figure_S7_feature_frequency_by_profile_temperature.png",
+    "figures/Figure_S7_feature_frequency_by_profile_temperature.pdf",
+    "tables/section4_feature_frequency_values_for_manuscript.md",
+    "frequency_structure_report.md",
+    "frequency_structure_metadata.json"
+  ],
+  "validation_checks": {
+    "all_twelve_profile_temperature_records_included_for_part_a": {
+      "check": "all_twelve_profile_temperature_records_included_for_part_a",
+      "status": "PASS",
+      "detail": "12 records found"
+    },
+    "record_boundary_reset": {
+      "check": "record_boundary_reset",
+      "status": "PASS",
+      "detail": "PSD and EMA feature calculations are performed per file/frame."
+    },
+    "no_model_prediction_residual_error_files_used": {
+      "check": "no_model_prediction_residual_error_files_used",
+      "status": "PASS",
+      "detail": ""
+    },
+    "section2_4_uses_raw_terminal_voltage": {
+      "check": "section2_4_uses_raw_terminal_voltage",
+      "status": "PASS",
+      "detail": "Voltage(V)"
+    },
+    "part_b_features_from_repository_code": {
+      "check": "part_b_features_from_repository_code",
+      "status": "PASS",
+      "detail": "Local analysis implementation copied from repository feature equations: soc_decomp.nmc_branchbands_experiment.estimate_r0_by_temperature/build_decomposed_frame and soc_decomp.nmc_vit_feature_lstm_experiment.causal_index_ema/add_vit_engineered_features."
+    },
+    "no_centered_or_future_windows_used": {
+      "check": "no_centered_or_future_windows_used",
+      "status": "PASS",
+      "detail": "EMA features use one-sided recurrences reset at record boundaries."
+    },
+    "all_output_csv_tables_and_figures_exist": {
+      "check": "all_output_csv_tables_and_figures_exist",
+      "status": "PASS",
+      "detail": "missing=[]"
+    },
+    "main_figures_saved_png_pdf": {
+      "check": "main_figures_saved_png_pdf",
+      "status": "PASS",
+      "detail": "figures/Figure_3_raw_signal_frequency_structure.png,figures/Figure_3_raw_signal_frequency_structure.pdf,figures/Figure_6_feature_frequency_behavior.png,figures/Figure_6_feature_frequency_behavior.pdf"
+    }
+  },
+  "part_a_record_count_detail": "12 / 12"
+}

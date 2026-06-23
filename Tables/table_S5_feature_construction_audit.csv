@@ -1,0 +1,6 @@
+Check item,Implementation,Evaluation relevance
+Target/state exclusion,"SOC labels, SOC_CC, cumulative Ah, window-start SOC, and trajectory progress are excluded from all input schemas.",No direct SOC proxy or explicit SOC-state input.
+Current input,"Current is used as instantaneous current, local excitation, and causal EMA/deviation features only.",No Coulomb-counted SOC input.
+EMA causality,EMA features use one-sided forward recurrences within each record.,No future samples are used.
+Record reset,EMA states are reset at each profile-temperature record boundary.,No carryover across independent records.
+Normalization,Standardization is fitted on training records only.,No test-distribution leakage.

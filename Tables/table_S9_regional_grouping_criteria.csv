@@ -1,0 +1,5 @@
+Region definition,Grouping rule
+SOC band,Low: SOC_CC <= 0.35; Mid: 0.35 < SOC_CC <= 0.65; High: SOC_CC > 0.65
+Recent absolute-current history,Low/High split by median absI_ema200 over FUDS descriptors
+Voltage-response deviation,Low/High split by median abs(V_corr_raw_dev_ema200) over FUDS descriptors
+Local V-I ambiguity,Ambiguous if local V-I bin has n >= 20 and SOC IQR >= 0.10 SOC fraction

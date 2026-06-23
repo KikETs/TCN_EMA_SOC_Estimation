@@ -1,0 +1,7 @@
+| Model       | Input                    | Temporal operator   | Main settings                                  |
+|:------------|:-------------------------|:--------------------|:-----------------------------------------------|
+| CEMA-TCN    | G4, 17 channels          | Causal Conv1d       | hidden size 128; 6 layers; kernel size 5; SiLU |
+| LSTM        | G4, 17 channels          | LSTM                | hidden size 128; 1 layer                       |
+| Transformer | G4, 17 channels          | Self-attention      | model dimension 128; 8 heads; 2 layers; GELU   |
+| GRU         | G4, 17 channels          | GRU                 | hidden size 128; 1 layer                       |
+| MLP         | G4 endpoint, 17 channels | None                | hidden size 128; 2 hidden layers; SiLU         |

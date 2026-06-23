@@ -1,0 +1,6 @@
+check,status,detail
+required_columns_mapped,PASS,12 mapped files
+no_centered_rolling_used,PASS,"Only pandas rolling(window, min_periods=1).mean() on each file group is used."
+history_resets_at_file_boundary,PASS,History descriptors are computed with groupby(file_name).transform(...).
+output_files_exist,PASS,29 / 29 files found
+no_forbidden_result_prediction_files_used,PASS,Discovery rejects prediction/residual/ablation/perturbation/baseline/rotation/epoch/forbidden/checkpoint paths.

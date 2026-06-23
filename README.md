@@ -1,136 +1,86 @@
-# Causal EMA Memory Features for Strict NoCC SOC Estimation
+# CEMA-TCN SOC Estimation Package
 
-## Project Overview
+This folder contains the files needed to reproduce the CEMA-TCN manuscript figures/tables and run the model family used in the paper.
 
-This release folder packages the frozen G4 EMA SOC-estimation candidate and the small summary metrics needed to regenerate paper tables and figures.
+## Data Availability
 
-The model follows a strict NoCC protocol: SOC, SOC_CC, cumulative Ah, trajectory progress, and explicit current-integration SOC state updates are not model inputs. Current is still used through instantaneous excitation and causal finite-memory EMA history.
+The code, configuration files, audit files, feature schemas, and processed summary results are available at [https://github.com/KikETs/TCN_EMA_SOC_Estimation](https://github.com/KikETs/TCN_EMA_SOC_Estimation). Raw CALCE battery records are not redistributed and should be obtained from the original CALCE data source. Large intermediate files, checkpoints, and full prediction dumps are not included.
 
-This is not a global SOTA claim and not a temperature-extrapolation claim. It is a reproducibility package for a frozen candidate selected after exploratory ablation.
-
-## What This Repository Contains
-
-- copied model/source code under `soc_decomp/`
-- frozen G4 configs under `configs/`
-- helper scripts under `scripts/`
-- documentation under `docs/`
-- scripts that can rebuild paper artifacts when local source metrics are placed under `paper_artifacts/source_metrics/`
-- tests under `tests/`
-
-## What This Repository Does Not Contain
-
-- no raw CALCE/NMC data
-- no large processed data
-- no checkpoints
-- no full prediction dumps
-- no committed `paper_artifacts/` folder
-
-Raw and processed data directories are ignored by Git. `paper_artifacts/` is also intentionally ignored in this GitHub upload; keep paper source metrics and generated figures local unless you explicitly decide to publish them.
-
-## Main Result
-
-Frozen G4, trained on `DST + US06 + BJDST` and evaluated on `FUDS` at `0C/25C/45C`, has a three-seed unweighted temperature-mean MAE of `0.4189 +/- 0.0157%`.
-
-Mean MAE by temperature:
-
-- `0C`: `0.4528%`
-- `25C`: `0.4564%`
-- `45C`: `0.3474%`
-
-The corresponding source metric files are kept in the local artifact package and are not committed in this GitHub upload.
-
-## Install
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-## Data Preparation
-
-Place raw CALCE/NMC CSV files under:
+## Folder layout
 
 ```text
-data/raw/NMC_SAMSUNG_INR_18650_2Ah/
+CEMA-TCN/
+  Data/
+    source_data_manifest.csv
+    raw_dynamic/        # put CALCE dynamic profile Excel files here
+    raw_reference/      # OCV / initial-capacity reference files
+    processed/          # generated model-ready CSV files
+    section2_tables/    # source tables for Section 2 figures/tables
+    source_tables/      # compact measurement-structure source tables
+    source_metrics/     # compact result CSVs for tables/figures
+    model_tables/       # model-performance and ablation source tables
+    frequency_tables/   # source tables for frequency-domain figures
+    figures_source/     # compact trace source data
+    manuscript_source_map.csv
+  Scripts/
+    figure_1.py ... figure_10.py
+    figure_S1.py ... figure_S3.py
+    table_1.py ... table_10.py
+    table_S1.py ... table_S11.py
+  Figures/
+    make_figures.ipynb  # notebook that calls figure scripts
+  Tables/
+    make_tables.ipynb   # notebook that calls table scripts
+  Models/
+    model_zoo.py        # TCN/LSTM/GRU/Transformer/MLP definitions
+    feature_sets.py     # G0/G1/G4/G6/G7/G8 input feature definitions
+    train.py            # minimal training entrypoint
 ```
 
-Then run:
+## Data conversion
+
+Place dynamic profile Excel files in `Data/raw_dynamic/`, then run:
 
 ```bash
-python scripts/check_data_presence.py
-python scripts/prepare_calce_nmc_data.py
-python scripts/build_g4_features.py
+python Data/prepare_calce_nmc.py
 ```
 
-## Run Main G4 Experiment
+The output CSV files are written to `Data/processed/`.
+
+Raw CALCE files and generated driving-profile CSV files are intentionally excluded from Git. The expected CALCE source archives and reference-file checksums are listed in:
+
+```text
+Data/source_data_manifest.csv
+```
+
+## Figure/table generation
+
+Run the notebooks:
 
 ```bash
-python scripts/train_g4.py --seeds 0,1,2
+jupyter notebook Figures/make_figures.ipynb
+jupyter notebook Tables/make_tables.ipynb
 ```
 
-For a quick single-seed reproduction:
+Or run scripts directly, for example:
 
 ```bash
-python scripts/train_g4.py --seeds 0
+python Scripts/figure_6.py
+python Scripts/table_6.py
 ```
 
-## Recompute Metrics
+The main-text/SI mapping is recorded in:
 
-If prediction CSV files are available locally:
+```text
+Data/manuscript_source_map.csv
+```
+
+## Model training
+
+Example:
 
 ```bash
-python scripts/recompute_metrics.py --predictions results/predictions/*.csv
+python Models/train.py --model cema_tcn --feature-set G4 --test-profile FUDS
 ```
 
-## Build Paper Artifacts
-
-```bash
-python scripts/build_paper_artifacts.py
-```
-
-This regenerates tables and figures from `paper_artifacts/source_metrics/` if those local source metric files are present.
-
-## Build Section 2 Measurement-Structure Analysis
-
-The manuscript Section 2 package analyzes terminal voltage/current/temperature/SOC records only. It does not train models and does not use G4 predictions or ablation outputs.
-
-```bash
-python analysis/section2_measurement_structure.py \
-  --data-root data \
-  --out-dir paper_ema_analysis_package/section2_measurement_structure \
-  --profiles DST US06 FUDS BJDST \
-  --temperatures 0 25 45 \
-  --main-test-profile FUDS
-```
-
-Generated tables, figures, metadata, and the markdown report are written under `paper_ema_analysis_package/section2_measurement_structure/`.
-
-## NoCC Protocol
-
-Forbidden as model inputs:
-
-- SOC or SOC_CC
-- cumulative Ah or charge-throughput features
-- trajectory progress or absolute time
-- test-label-based gates or thresholds
-- explicit `SOC_next = SOC - I * dt / Q` state updates
-
-Allowed:
-
-- `V_corr_raw`
-- instantaneous `I_raw`
-- ambient temperature `T`
-- causal finite-memory EMA and deviation channels derived from voltage/current streams
-
-## Important Limitations
-
-G4 was selected after exploratory seed-0 ablation, so it should be described as a frozen candidate requiring confirmation rather than a pre-declared blind model. EMA current-history features may correlate with cumulative charge, so the package includes forbidden-reference diagnostics and explicit caveats.
-
-## Citation Placeholder
-
-Update `CITATION.cff` after the manuscript title, authors, venue, and DOI are finalized.
-
-## License Note
-
-No license has been selected yet. See `LICENSE_OR_TODO.md` before publishing.
+The proposed TCN uses one causal-convolution sublayer per residual block. The older two-sublayer variant is intentionally excluded.

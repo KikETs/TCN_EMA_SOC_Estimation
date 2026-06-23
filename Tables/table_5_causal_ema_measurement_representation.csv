@@ -1,0 +1,5 @@
+Group,Channels,Memory scales
+Base measurement-derived channels,"V_corr_raw, I_raw, T",-
+Voltage EMA memory,"V_corr_raw_ema50, V_corr_raw_dev_ema50; V_corr_raw_ema200, V_corr_raw_dev_ema200; V_corr_raw_ema800, V_corr_raw_dev_ema800","50, 200, 800"
+Current EMA memory,"I_raw_ema50, I_raw_dev_ema50; I_raw_ema200, I_raw_dev_ema200","50, 200"
+Absolute-current EMA memory,"absI_ema50, absI_dev_ema50; absI_ema200, absI_dev_ema200","50, 200"
