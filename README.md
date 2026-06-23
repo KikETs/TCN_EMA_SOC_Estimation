@@ -84,6 +84,23 @@ python Data/prepare_calce_nmc.py
 ```
 
 The output CSV files are written to `Data/processed/`.
+The default conversion checks that the complete 12-file 80 % SOC manuscript
+dynamic-profile set is present. For a partial conversion check, pass
+`--allow-incomplete`.
+
+For the manuscript dataset, `Data/raw_dynamic/` must contain the 12 driving
+profile files matching:
+
+```text
+*0C_BJDST_80SOC.xls*    *25C_BJDST_80SOC.xls*    *45C_BJDST_80SOC.xls*
+*0C_DST_80SOC.xls*      *25C_DST_80SOC.xls*      *45C_DST_80SOC.xls*
+*0C_US06_80SOC.xls*     *25C_US06_80SOC.xls*     *45C_US06_80SOC.xls*
+*0C_FUDS_80SOC.xls*     *25C_FUDS_80SOC.xls*     *45C_FUDS_80SOC.xls*
+```
+
+The filename may include a leading date/cell prefix, for example
+`02_24_2016_SP20-2_0C_DST_80SOC.xls`. Low-current OCV files are reference
+files and belong in `Data/raw_reference/`, not `Data/raw_dynamic/`.
 
 Raw CALCE files and generated driving-profile CSV files are intentionally excluded from Git. The expected CALCE source archives and reference-file checksums are listed in:
 

@@ -2,6 +2,9 @@
 
 Place dynamic CALCE/NMC profile Excel files in `Data/raw_dynamic/`.
 
+Do not place only low-current OCV files in `Data/raw_dynamic/`. The model
+training dataset requires dynamic driving-profile records.
+
 Raw CALCE files are not redistributed in this repository. The source archive URLs and local reference-file checksums are listed in:
 
 ```text
@@ -11,6 +14,49 @@ Data/source_data_manifest.csv
 Expected filename metadata:
 - profile token: `BJDST`, `DST`, `US06`, or `FUDS`
 - temperature token: `0C`, `25C`, or `45C`
+- optional start-SOC token after the profile, e.g. `0C_DST_80SOC.xls`,
+  `0C_DST_80.xls`, or `25C_FUDS_50SOC.xlsx`
+
+Required dynamic files for the manuscript dataset:
+
+```text
+Data/raw_dynamic/
+  *0C_BJDST_80SOC.xls*
+  *0C_DST_80SOC.xls*
+  *0C_US06_80SOC.xls*
+  *0C_FUDS_80SOC.xls*
+  *25C_BJDST_80SOC.xls*
+  *25C_DST_80SOC.xls*
+  *25C_US06_80SOC.xls*
+  *25C_FUDS_80SOC.xls*
+  *45C_BJDST_80SOC.xls*
+  *45C_DST_80SOC.xls*
+  *45C_US06_80SOC.xls*
+  *45C_FUDS_80SOC.xls*
+```
+
+The leading date/cell prefix may differ, for example:
+
+```text
+02_24_2016_SP20-2_0C_DST_80SOC.xls
+```
+
+The important part is that each dynamic file name contains temperature,
+profile, and start-SOC tokens. Files ending in `50SOC` are parsed correctly,
+but they are not the 80 % SOC manuscript dynamic-profile set.
+
+Reference files belong in `Data/raw_reference/`:
+
+```text
+Data/raw_reference/
+  *Initial*capacity*.xls*
+  *lowcurrentOCV*.xls*
+  *low current OCV*.xlsx
+```
+
+The initial-capacity file is used to infer capacity when `--capacity-ah` is not
+provided. Low-current OCV files are reference/provenance files and are not a
+substitute for the dynamic profile files above.
 
 Run:
 
@@ -18,10 +64,18 @@ Run:
 python Data/prepare_calce_nmc.py
 ```
 
+By default, the script validates that all 12 manuscript dynamic-profile files
+are present. For a single-file or partial conversion check, pass:
+
+```bash
+python Data/prepare_calce_nmc.py --allow-incomplete
+```
+
 The script writes profile-temperature CSV files to `Data/processed/`.
 
 SOC label rule used by default:
-- initial SOC = 80 %
+- initial SOC is inferred from the filename when available
+- otherwise initial SOC defaults to 80 %
 - capacity is inferred from `Data/raw_reference/*Initial*capacity*.xls*` when possible
 - otherwise capacity defaults to 2.0 Ah
 - SOC decreases with discharged Ah and is clipped to `[0, 100]`
