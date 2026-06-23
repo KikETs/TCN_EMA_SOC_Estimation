@@ -6,6 +6,44 @@ This folder contains the files needed to reproduce the CEMA-TCN manuscript figur
 
 The code, configuration files, audit files, feature schemas, and processed summary results are available at [https://github.com/KikETs/TCN_EMA_SOC_Estimation](https://github.com/KikETs/TCN_EMA_SOC_Estimation). Raw CALCE battery records are not redistributed and should be obtained from the original CALCE data source. Large intermediate files, checkpoints, and full prediction dumps are not included.
 
+## Conda Environment
+
+The experiments are intended to run in a Conda environment with Python 3.12.
+
+```bash
+conda create -n cema-tcn python=3.12 -y
+conda activate cema-tcn
+python -m pip install --upgrade pip
+```
+
+Install PyTorch separately for your machine. Use the official PyTorch install selector and choose the command matching your OS, package manager, and compute platform:
+
+```text
+https://pytorch.org/get-started/locally/
+```
+
+After PyTorch is installed, install the remaining package requirements:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Required non-PyTorch packages were determined from the repository imports:
+
+```text
+numpy
+pandas
+matplotlib
+pillow
+lxml
+openpyxl
+xlrd
+jupyter
+tabulate
+```
+
+`scipy` is not required. Frequency-analysis scripts use `scipy.signal.welch` only when SciPy is already available; otherwise they fall back to the repository's deterministic periodogram implementation.
+
 ## Folder layout
 
 ```text
