@@ -14,25 +14,25 @@ Data/source_data_manifest.csv
 Expected filename metadata:
 - profile token: `BJDST`, `DST`, `US06`, or `FUDS`
 - temperature token: `0C`, `25C`, or `45C`
-- optional start-SOC token after the profile, e.g. `0C_DST_80SOC.xls`,
-  `0C_DST_80.xls`, or `25C_FUDS_50SOC.xlsx`
+- required start-SOC token after the profile, e.g. `0C_DST_80.xls`
+  or `0C_DST_80SOC.xls`
 
 Required dynamic files for the manuscript dataset:
 
 ```text
 Data/raw_dynamic/
-  *0C_BJDST_80SOC.xls*
-  *0C_DST_80SOC.xls*
-  *0C_US06_80SOC.xls*
-  *0C_FUDS_80SOC.xls*
-  *25C_BJDST_80SOC.xls*
-  *25C_DST_80SOC.xls*
-  *25C_US06_80SOC.xls*
-  *25C_FUDS_80SOC.xls*
-  *45C_BJDST_80SOC.xls*
-  *45C_DST_80SOC.xls*
-  *45C_US06_80SOC.xls*
-  *45C_FUDS_80SOC.xls*
+  *0C_BJDST_80*.xls*
+  *0C_DST_80*.xls*
+  *0C_US06_80*.xls*
+  *0C_FUDS_80*.xls*
+  *25C_BJDST_80*.xls*
+  *25C_DST_80*.xls*
+  *25C_US06_80*.xls*
+  *25C_FUDS_80*.xls*
+  *45C_BJDST_80*.xls*
+  *45C_DST_80*.xls*
+  *45C_US06_80*.xls*
+  *45C_FUDS_80*.xls*
 ```
 
 The leading date/cell prefix may differ, for example:
@@ -42,8 +42,8 @@ The leading date/cell prefix may differ, for example:
 ```
 
 The important part is that each dynamic file name contains temperature,
-profile, and start-SOC tokens. Files ending in `50SOC` are parsed correctly,
-but they are not the 80 % SOC manuscript dynamic-profile set.
+profile, and an `80` or `80SOC` start-SOC token. Other start-SOC tokens are
+rejected by the preprocessing script.
 
 Reference files belong in `Data/raw_reference/`:
 
@@ -74,11 +74,14 @@ python Data/prepare_calce_nmc.py --allow-incomplete
 The script writes profile-temperature CSV files to `Data/processed/`.
 
 SOC label rule used by default:
-- initial SOC is inferred from the filename when available
-- otherwise initial SOC defaults to 80 %
+- initial SOC is inferred from the `80` or `80SOC` filename token when available
+- otherwise initial SOC defaults to 80 % only for files without any SOC token
 - capacity is inferred from `Data/raw_reference/*Initial*capacity*.xls*` when possible
 - otherwise capacity defaults to 2.0 Ah
-- SOC decreases with discharged Ah and is clipped to `[0, 100]`
+- SOC uses net removed capacity, `Discharge_Capacity(Ah) - Charge_Capacity(Ah)`,
+  when both capacity columns are available
+- otherwise SOC is estimated from net current integration
+- SOC is clipped to `[0, 100]`
 
 Feature construction:
 - `V_corr_raw = causal_time_ema(V_raw - I_raw * R0(T), tau=120 s)`

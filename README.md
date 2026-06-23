@@ -92,15 +92,16 @@ For the manuscript dataset, `Data/raw_dynamic/` must contain the 12 driving
 profile files matching:
 
 ```text
-*0C_BJDST_80SOC.xls*    *25C_BJDST_80SOC.xls*    *45C_BJDST_80SOC.xls*
-*0C_DST_80SOC.xls*      *25C_DST_80SOC.xls*      *45C_DST_80SOC.xls*
-*0C_US06_80SOC.xls*     *25C_US06_80SOC.xls*     *45C_US06_80SOC.xls*
-*0C_FUDS_80SOC.xls*     *25C_FUDS_80SOC.xls*     *45C_FUDS_80SOC.xls*
+*0C_BJDST_80*.xls*    *25C_BJDST_80*.xls*    *45C_BJDST_80*.xls*
+*0C_DST_80*.xls*      *25C_DST_80*.xls*      *45C_DST_80*.xls*
+*0C_US06_80*.xls*     *25C_US06_80*.xls*     *45C_US06_80*.xls*
+*0C_FUDS_80*.xls*     *25C_FUDS_80*.xls*     *45C_FUDS_80*.xls*
 ```
 
 The filename may include a leading date/cell prefix, for example
-`02_24_2016_SP20-2_0C_DST_80SOC.xls`. Low-current OCV files are reference
-files and belong in `Data/raw_reference/`, not `Data/raw_dynamic/`.
+`02_24_2016_SP20-2_0C_DST_80SOC.xls` or
+`02_24_2016_SP20-2_0C_DST_80.xls`. Low-current OCV files are reference files
+and belong in `Data/raw_reference/`, not `Data/raw_dynamic/`.
 
 Raw CALCE files and generated driving-profile CSV files are intentionally excluded from Git. The expected CALCE source archives and reference-file checksums are listed in:
 

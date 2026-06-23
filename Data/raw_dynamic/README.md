@@ -16,23 +16,23 @@ Expected temperature tokens:
 - 45C
 
 Expected start-SOC token:
-- 80SOC for the manuscript dynamic-profile set
+- 80 or 80SOC for the manuscript dynamic-profile set
 
 Required manuscript dynamic-profile file patterns:
 
 ```text
-*0C_BJDST_80SOC.xls*
-*0C_DST_80SOC.xls*
-*0C_US06_80SOC.xls*
-*0C_FUDS_80SOC.xls*
-*25C_BJDST_80SOC.xls*
-*25C_DST_80SOC.xls*
-*25C_US06_80SOC.xls*
-*25C_FUDS_80SOC.xls*
-*45C_BJDST_80SOC.xls*
-*45C_DST_80SOC.xls*
-*45C_US06_80SOC.xls*
-*45C_FUDS_80SOC.xls*
+*0C_BJDST_80*.xls*
+*0C_DST_80*.xls*
+*0C_US06_80*.xls*
+*0C_FUDS_80*.xls*
+*25C_BJDST_80*.xls*
+*25C_DST_80*.xls*
+*25C_US06_80*.xls*
+*25C_FUDS_80*.xls*
+*45C_BJDST_80*.xls*
+*45C_DST_80*.xls*
+*45C_US06_80*.xls*
+*45C_FUDS_80*.xls*
 ```
 
 Date and cell prefixes are allowed. Example:
@@ -41,5 +41,5 @@ Date and cell prefixes are allowed. Example:
 02_24_2016_SP20-2_0C_DST_80SOC.xls
 ```
 
-`Data/prepare_calce_nmc.py` requires the full 12-file 80SOC set by default.
+`Data/prepare_calce_nmc.py` requires the full 12-file 80 % SOC set by default.
 Use `--allow-incomplete` only for a partial conversion test.

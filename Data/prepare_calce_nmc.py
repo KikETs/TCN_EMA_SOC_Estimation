@@ -77,15 +77,16 @@ def infer_initial_soc_percent(path: Path) -> float | None:
     stem = path.stem.upper()
     profile_pattern = "|".join(PROFILE_ORDER)
     patterns = [
-        rf"(?:{profile_pattern})[^A-Z0-9]+(?P<soc>\d+(?:\.\d+)?)\s*(?:SOC|PCT|PERCENT)?(?:$|[^A-Z0-9])",
+        rf"(?:{profile_pattern})[^A-Z0-9]+(?P<soc>\d+(?:\.\d+)?)\s*(?:SOC)?(?:$|[^A-Z0-9])",
         r"(?P<soc>\d+(?:\.\d+)?)\s*SOC(?:$|[^A-Z0-9])",
     ]
     for pattern in patterns:
         match = re.search(pattern, stem, flags=re.IGNORECASE)
         if match:
             value = float(match.group("soc"))
-            if 0.0 <= value <= 100.0:
-                return value
+            if np.isclose(value, MANUSCRIPT_INITIAL_SOC_PERCENT):
+                return MANUSCRIPT_INITIAL_SOC_PERCENT
+            raise ValueError(f"Unsupported start-SOC token in {path.name}: {value:g}SOC. Expected 80 or 80SOC.")
     return None
 
 
@@ -116,10 +117,10 @@ def validate_manuscript_dynamic_set(frames: list[pd.DataFrame]) -> None:
     missing = sorted(expected_manuscript_records() - observed_records(frames))
     if not missing:
         return
-    formatted = "\n".join(f"  *{int(temp)}C_{profile}_{format_soc_for_filename(soc)}SOC.xls*" for temp, profile, soc in missing)
+    formatted = "\n".join(f"  *{int(temp)}C_{profile}_{format_soc_for_filename(soc)}*.xls*" for temp, profile, soc in missing)
     raise ValueError(
         "Missing required manuscript dynamic-profile files. "
-        "Place all 0/25/45 C BJDST/DST/US06/FUDS 80SOC files in Data/raw_dynamic/ "
+        "Place all 0/25/45 C BJDST/DST/US06/FUDS 80 % SOC files in Data/raw_dynamic/ "
         "or pass --allow-incomplete for a partial conversion.\n"
         f"{formatted}"
     )
@@ -221,12 +222,16 @@ def compute_soc_percent(frame: pd.DataFrame, capacity_ah: float, initial_soc_per
     if "Discharge_Capacity_Ah" in frame and frame["Discharge_Capacity_Ah"].notna().any():
         discharged = pd.to_numeric(frame["Discharge_Capacity_Ah"], errors="coerce").ffill().fillna(0.0)
         discharged = discharged - float(discharged.iloc[0])
+        if "Charge_Capacity_Ah" in frame and frame["Charge_Capacity_Ah"].notna().any():
+            charged = pd.to_numeric(frame["Charge_Capacity_Ah"], errors="coerce").ffill().fillna(0.0)
+            charged = charged - float(charged.iloc[0])
+            discharged = discharged - charged
     else:
         time = frame["time_s"].to_numpy(float)
         current = frame["I_raw"].to_numpy(float)
         dt = np.diff(time, prepend=time[0])
         dt = np.where(np.isfinite(dt) & (dt > 0), dt, np.nanmedian(dt[dt > 0]) if np.any(dt > 0) else 1.0)
-        discharged = np.cumsum(np.maximum(-current, 0.0) * dt / 3600.0)
+        discharged = np.cumsum((np.maximum(-current, 0.0) - np.maximum(current, 0.0)) * dt / 3600.0)
     soc = initial_soc_percent - 100.0 * np.asarray(discharged, dtype=float) / capacity_ah
     return pd.Series(np.clip(soc, 0.0, 100.0), index=frame.index)
 
