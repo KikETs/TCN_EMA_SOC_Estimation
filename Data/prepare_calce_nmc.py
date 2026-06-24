@@ -79,7 +79,16 @@ def infer_profile(path: Path) -> str | None:
 
 def infer_temperature(path: Path) -> float | None:
     match = re.search(r"(?<!\d)(-?\d+(?:\.\d+)?)\s*C", path.stem, flags=re.IGNORECASE)
-    return float(match.group(1)) if match else None
+    if match:
+        return float(match.group(1))
+    stem = path.stem.lower()
+    if re.search(r"(?:^|_)02_\d{2}_2016", stem):
+        return 0.0
+    if re.search(r"(?:^|_)11_\d{1,2}_2015", stem):
+        return 25.0
+    if re.search(r"(?:^|_)12_\d{2}_2015", stem):
+        return 45.0
+    return None
 
 
 def infer_filename_soc_token_percent(path: Path) -> float | None:
